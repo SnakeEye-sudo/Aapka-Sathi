@@ -8,7 +8,7 @@ Every `Sathi` app must satisfy these defaults.
    All family apps must use the same Firebase project so one Google login works across the whole family.
 
 2. PWA installability
-   Every app must ship a `manifest.json`, service worker, install prompt, and app icons.
+   Every app must ship a `manifest.json`, service worker, install prompt, app icons, and a user-facing install popup when the app is not yet installed.
 
 3. Day/Night theme
    Every app must support both light and dark mode with a visible theme toggle.
@@ -22,7 +22,7 @@ Every `Sathi` app must satisfy these defaults.
    - `Terms & Conditions`
 
 5. Daily reminder
-   Every app must offer a user-facing notification setting and attempt one reminder every 24 hours about its core utility.
+   Every app must offer a user-facing notification setting, show the reminder opt-in prompt after install or first meaningful launch, and attempt one reminder every 24 hours about its core utility.
 
 6. Feedback entry point
    Every app must expose an easy feedback action from the UI.

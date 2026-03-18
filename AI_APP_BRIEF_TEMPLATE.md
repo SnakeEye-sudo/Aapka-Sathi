@@ -16,9 +16,9 @@ Technical constraints:
 - Must be deployable on GitHub Pages
 - Must support mobile and desktop
 - Must include both light and dark theme
-- Must include PWA install support
+- Must include PWA install support and show an install popup when the app is not installed
 - Must use the shared Firebase project pattern so Google login works across the entire Sathi family
-- Must include local reminder support for the app's core job once every 24 hours
+- Must include local reminder support for the app's core job once every 24 hours and ask for reminder permission after install or first meaningful launch
 - Must include a visible feedback action
 - Must include these pages:
   - About

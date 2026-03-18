@@ -1,22 +1,14 @@
 const HUB_BASE = window.location.pathname.startsWith("/Aapka-Sathi") ? "/Aapka-Sathi" : "";
 const FAMILY_APPS_URL = new URL(`${HUB_BASE}/apps/apps.json`, window.location.origin).toString();
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyC6Cpg83N8fBuvY7YOSwTWsfM9DUsaVc3E",
-  authDomain: "pariksha-sathi.firebaseapp.com",
-  projectId: "pariksha-sathi",
-  storageBucket: "pariksha-sathi.firebasestorage.app",
-  messagingSenderId: "921721697043",
-  appId: "1:921721697043:web:dada90a420c40e11ae60e6",
-  measurementId: "G-NC7955J7KV"
-};
 const STORAGE = {
   theme: "aapka-sathi-theme",
   notifEnabled: "aapka-sathi-notif-enabled",
-  notifName: "aapka-sathi-notif-name",
-  notifLastShown: "aapka-sathi-notif-last-shown"
+  notifLastShown: "aapka-sathi-notif-last-shown",
+  notifAsked: "aapka-sathi-notif-asked"
 };
 
-let auth = null;
+let deferredPrompt = null;
+let isInstalled = window.matchMedia("(display-mode: standalone)").matches;
 
 function applyTheme(theme) {
   document.body.dataset.theme = theme;
@@ -34,83 +26,48 @@ function initTheme() {
   });
 }
 
-function chip(label, type) {
-  const suffix = type === "yes" ? "Yes" : type === "no" ? "Gap" : "Partial";
-  return `<div class="feature-chip ${type}">${label}: ${suffix}</div>`;
+function appMood(app) {
+  if (/Pariksha/i.test(app.name)) return "Study smarter, plan better.";
+  if (/Rozgar/i.test(app.name)) return "Jobs aur career tracking ek jagah.";
+  if (/Samachar/i.test(app.name)) return "Daily current affairs ko easy banao.";
+  if (/Hisaab/i.test(app.name)) return "Daily finance aur udhar ko control me rakho.";
+  if (/Antariksh/i.test(app.name)) return "Sky events aur space curiosity ko explore karo.";
+  return app.tagline;
 }
 
 async function renderApps() {
   const container = document.getElementById("appGrid");
   if (!container) return;
 
-  let data;
   try {
     const res = await fetch(FAMILY_APPS_URL, { cache: "no-store" });
     if (!res.ok) throw new Error(`Registry fetch failed: ${res.status}`);
-    data = await res.json();
-  } catch (error) {
-    container.innerHTML = `<article class="app-card"><h3 class="app-name">Registry unavailable</h3><p class="app-desc">App listing abhi load nahi ho paayi. Please refresh once, ya thodi der baad dubara try karein.</p></article>`;
-    console.error(error);
-    return;
-  }
-  const liveCount = data.apps.filter((app) => app.status === "LIVE").length;
-  const standardCount = data.apps.filter((app) => app.sharedLogin && app.pwa).length;
+    const data = await res.json();
+    document.getElementById("liveCount").textContent = String(data.apps.filter((app) => app.status === "LIVE").length);
+    document.getElementById("familyCount").textContent = String(data.apps.length);
+    document.getElementById("pwaCount").textContent = String(data.apps.filter((app) => app.pwa).length);
+    document.getElementById("reminderCount").textContent = String(data.apps.filter((app) => app.notification).length);
 
-  document.getElementById("liveCount").textContent = String(liveCount);
-  document.getElementById("familyCount").textContent = String(data.apps.length);
-  document.getElementById("standardCount").textContent = String(standardCount);
-  document.getElementById("registryCount").textContent = String(data.apps.length);
-
-  container.innerHTML = data.apps.map((app) => `
-    <article class="app-card">
-      <div class="app-top">
-        <div>
-          <p class="muted">${app.emoji}</p>
-          <h3 class="app-name">${app.name}</h3>
+    container.innerHTML = data.apps.map((app) => `
+      <article class="app-card">
+        <div class="app-top">
+          <div>
+            <p class="muted">${app.emoji}</p>
+            <h3 class="app-name">${app.name}</h3>
+          </div>
+          <span class="status-pill">${app.status}</span>
         </div>
-        <span class="status-pill">${app.status}</span>
-      </div>
-      <p class="app-tagline">${app.tagline}</p>
-      <p class="app-desc">${app.description}</p>
-      <div class="feature-list">
-        ${chip("Shared Login", app.sharedLogin ? "yes" : "no")}
-        ${chip("PWA", app.pwa ? "yes" : "no")}
-        ${chip("Theme", app.theme ? "yes" : "warn")}
-        ${chip("Reminder", app.notification ? "yes" : "warn")}
-        ${chip("Feedback", app.feedback ? "yes" : "warn")}
-      </div>
-      <div class="app-actions">
-        <a class="solid-btn" href="${app.url}" target="_blank" rel="noopener noreferrer">Open App</a>
-        <a class="ghost-btn" href="${HUB_BASE}/resources.html#${app.id}">Family Notes</a>
-      </div>
-    </article>
-  `).join("");
-}
-
-async function initFirebaseAuth() {
-  const firebase = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js");
-  const authLib = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js");
-  firebase.initializeApp(FIREBASE_CONFIG);
-  auth = authLib.getAuth();
-  const provider = new authLib.GoogleAuthProvider();
-
-  authLib.onAuthStateChanged(auth, (user) => {
-    const authState = document.getElementById("authState");
-    const authButton = document.getElementById("authButton");
-    const nameInput = document.getElementById("notifName");
-    if (!authState || !authButton) return;
-
-    if (user) {
-      authState.textContent = `${user.displayName || user.email} is signed in`;
-      authButton.textContent = "Logout";
-      authButton.onclick = async () => authLib.signOut(auth);
-      if (nameInput && !nameInput.value) nameInput.value = user.displayName || "";
-    } else {
-      authState.textContent = "No active family login";
-      authButton.textContent = "Login with Google";
-      authButton.onclick = async () => authLib.signInWithPopup(auth, provider);
-    }
-  });
+        <p class="app-tagline">${appMood(app)}</p>
+        <p class="app-desc">${app.description}</p>
+        <div class="app-actions">
+          <a class="solid-btn" href="${app.url}" target="_blank" rel="noopener noreferrer">Open App</a>
+        </div>
+      </article>
+    `).join("");
+  } catch (error) {
+    container.innerHTML = `<article class="app-card"><h3 class="app-name">Apps could not load</h3><p class="app-desc">Thodi der baad refresh karke dubara try karo.</p></article>`;
+    console.error(error);
+  }
 }
 
 function initPwa() {
@@ -120,22 +77,33 @@ function initPwa() {
     });
   }
 
-  let deferredPrompt = null;
-  const installBtn = document.getElementById("installButton");
-  if (!installBtn) return;
-
   window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
     deferredPrompt = event;
-    installBtn.classList.remove("hidden");
+    document.getElementById("installButton")?.classList.remove("hidden");
+    if (!isInstalled) document.getElementById("installModal")?.classList.add("open");
   });
 
-  installBtn.addEventListener("click", async () => {
+  window.addEventListener("appinstalled", () => {
+    isInstalled = true;
+    document.getElementById("installModal")?.classList.remove("open");
+    document.getElementById("installButton")?.classList.add("hidden");
+    if (localStorage.getItem(STORAGE.notifAsked) !== "true") {
+      document.getElementById("notifModal")?.classList.add("open");
+    }
+  });
+
+  async function triggerInstall() {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    installBtn.classList.add("hidden");
+  }
+
+  document.getElementById("installButton")?.addEventListener("click", triggerInstall);
+  document.getElementById("heroInstallButton")?.addEventListener("click", triggerInstall);
+  document.getElementById("installNowButton")?.addEventListener("click", triggerInstall);
+  document.getElementById("installLaterButton")?.addEventListener("click", () => {
+    document.getElementById("installModal")?.classList.remove("open");
   });
 }
 
@@ -143,11 +111,9 @@ function maybeShowReminder() {
   if (localStorage.getItem(STORAGE.notifEnabled) !== "true") return;
   if (!("Notification" in window) || Notification.permission !== "granted") return;
   const lastShown = Number(localStorage.getItem(STORAGE.notifLastShown) || "0");
-  const oneDay = 24 * 60 * 60 * 1000;
-  if (Date.now() - lastShown < oneDay) return;
-  const name = localStorage.getItem(STORAGE.notifName) || "Friend";
+  if (Date.now() - lastShown < 24 * 60 * 60 * 1000) return;
   new Notification("Aapka-Sathi reminder", {
-    body: `${name}, aaj apna Sathi app open karke progress check karo.`,
+    body: "Aaj apna useful Sathi app open karke progress check kar lo.",
     icon: `${HUB_BASE}/logo.svg`,
     tag: "aapka-sathi-daily"
   });
@@ -155,27 +121,29 @@ function maybeShowReminder() {
 }
 
 function initNotifications() {
-  const toggle = document.getElementById("notifToggle");
-  const saveBtn = document.getElementById("notifSave");
-  const nameInput = document.getElementById("notifName");
-  const status = document.getElementById("notifStatus");
-  if (!toggle || !saveBtn || !nameInput || !status) return;
-
-  toggle.checked = localStorage.getItem(STORAGE.notifEnabled) === "true";
-  nameInput.value = localStorage.getItem(STORAGE.notifName) || nameInput.value || "";
-
-  saveBtn.addEventListener("click", async () => {
-    localStorage.setItem(STORAGE.notifEnabled, String(toggle.checked));
-    localStorage.setItem(STORAGE.notifName, nameInput.value.trim());
-    if (toggle.checked && "Notification" in window) {
-      const permission = await Notification.requestPermission();
-      status.textContent = permission === "granted"
-        ? "Reminder preference saved. Reminder appears on return visits after 24h."
-        : "Notification permission blocked. Enable it from browser settings.";
+  document.getElementById("notifAllow")?.addEventListener("click", async () => {
+    localStorage.setItem(STORAGE.notifAsked, "true");
+    localStorage.setItem(STORAGE.notifEnabled, "true");
+    if (!("Notification" in window)) {
+      document.getElementById("notifStatus").textContent = "Is browser me notification support nahi hai.";
     } else {
-      status.textContent = "Reminder preference saved locally.";
+      const permission = await Notification.requestPermission();
+      document.getElementById("notifStatus").textContent = permission === "granted"
+        ? "Daily reminder on ho gaya."
+        : "Notification permission off hai.";
     }
+    document.getElementById("notifModal")?.classList.remove("open");
   });
+
+  document.getElementById("notifSkip")?.addEventListener("click", () => {
+    localStorage.setItem(STORAGE.notifAsked, "true");
+    localStorage.setItem(STORAGE.notifEnabled, "false");
+    document.getElementById("notifModal")?.classList.remove("open");
+  });
+
+  if (isInstalled && localStorage.getItem(STORAGE.notifAsked) !== "true") {
+    document.getElementById("notifModal")?.classList.add("open");
+  }
 
   maybeShowReminder();
 }
@@ -217,5 +185,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   initFeedback();
   initYear();
   await renderApps();
-  await initFirebaseAuth();
 });

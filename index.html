@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aapka-Sathi | Sathi Family Hub</title>
-  <meta name="description" content="Aapka-Sathi is the family hub for Pariksha Sathi, Rozgar Sathi, Samachar Sathi, and every future Sathi app.">
+  <meta name="description" content="Aapka-Sathi is the family hub for focused everyday apps like study, jobs, news, finance, and more.">
   <link rel="icon" href="/Aapka-Sathi/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="/Aapka-Sathi/manifest.json">
   <meta name="theme-color" content="#d97706">
@@ -21,7 +21,7 @@
           <img src="/Aapka-Sathi/logo.svg" alt="Aapka-Sathi">
           <span>
             <span class="brand-title">Aapka-Sathi</span>
-            <span class="brand-sub">Sathi Family Hub</span>
+            <span class="brand-sub">Everyday app family</span>
           </span>
         </a>
         <nav class="nav">
@@ -35,121 +35,127 @@
         </nav>
       </div>
     </header>
+
     <main>
       <section class="hero">
         <div class="container hero-panel">
           <div>
-            <span class="eyebrow">One identity, many focused apps</span>
-            <h1><span class="accent">Aapka-Sathi</span> keeps the whole Sathi family together.</h1>
+            <span class="eyebrow">One family, many useful apps</span>
+            <h1><span class="accent">Aapka-Sathi</span> ka matlab hai har kaam ke liye ek focused saathi.</h1>
             <p>
-              Every Sathi app stays independently live on its own GitHub Pages URL, but this hub makes the ecosystem visible,
-              consistent, and easier to grow.
+              Padhai, jobs, current affairs, hisaab, aur future me aur bhi useful apps.
+              Yahan se poori family ko ek jagah se explore karo aur jo app tumhare kaam ka ho use kholo.
             </p>
             <div class="hero-actions">
-              <a class="solid-btn" href="#apps">Explore Family Apps</a>
-              <a class="ghost-btn" href="/Aapka-Sathi/ADD_NEW_SATHI.md">How To Add A New Sathi</a>
+              <a class="solid-btn" href="#apps">See All Apps</a>
+              <button class="ghost-btn" id="heroInstallButton" type="button">Install Hub</button>
             </div>
           </div>
           <aside class="hero-side">
             <h2>Family Snapshot</h2>
             <div class="score-grid">
               <div class="score-card"><strong id="liveCount">0</strong><span>Live apps</span></div>
-              <div class="score-card"><strong id="familyCount">0</strong><span>Family apps</span></div>
-              <div class="score-card"><strong id="standardCount">0</strong><span>Shared auth + PWA</span></div>
-              <div class="score-card"><strong id="registryCount">0</strong><span>Hub registry entries</span></div>
+              <div class="score-card"><strong id="familyCount">0</strong><span>Total apps</span></div>
+              <div class="score-card"><strong id="pwaCount">0</strong><span>Install-ready</span></div>
+              <div class="score-card"><strong id="reminderCount">0</strong><span>Reminder apps</span></div>
             </div>
-            <div style="margin-top:1rem">
-              <p class="muted" id="authState">Checking family login...</p>
-              <div class="field-row" style="margin-top:0.8rem">
-                <button class="solid-btn" id="authButton" type="button">Login with Google</button>
-              </div>
-            </div>
+            <p class="muted" style="margin-top:1rem">Har app apne kaam ke liye bana hai, isliye app choose karna easy rehta hai aur confusion kam hota hai.</p>
           </aside>
         </div>
       </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2>Aapka-Sathi kya hai?</h2>
+              <p>Ek simple family hub jahan se tum apne kaam ke hisaab se सही app choose kar sakte ho.</p>
+            </div>
+          </div>
+          <div class="stack-grid">
+            <article class="stack-card">
+              <h3>Focused apps</h3>
+              <p>Har app ek specific problem solve karta hai. Isliye use karna seedha aur clear feel hota hai.</p>
+            </article>
+            <article class="stack-card">
+              <h3>Phone-friendly</h3>
+              <p>Apps is tarah bante hain ki mobile par easily use ho sake aur install bhi kiye ja sakein.</p>
+            </article>
+            <article class="stack-card">
+              <h3>Daily use</h3>
+              <p>Study, jobs, news, finance jaise kaam roz ke hote hain. Family ka goal wahi daily value dena hai.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section class="section" id="apps">
         <div class="container">
           <div class="section-head">
             <div>
-              <h2>Current Sathi Family</h2>
-              <p>Each app has its own purpose, its own Pages deployment, and a shared family identity.</p>
+              <h2>Current Sathi Apps</h2>
+              <p>Jo app chahiye usko kholo aur seedha use karo.</p>
             </div>
           </div>
           <div id="appGrid" class="app-grid"></div>
         </div>
       </section>
-      <section class="section">
-        <div class="container">
-          <div class="section-head">
-            <div>
-              <h2>Family Rules For Every New App</h2>
-              <p>The family grows through repeatable defaults, not manual memory.</p>
-            </div>
-          </div>
-          <div class="stack-grid">
-            <article class="stack-card"><h3>Shared Login</h3><p>Use the same Firebase project so one Google login works across the family.</p></article>
-            <article class="stack-card"><h3>PWA + Install</h3><p>Every app should install cleanly, work offline where possible, and feel app-like.</p></article>
-            <article class="stack-card"><h3>Day/Night Theme</h3><p>Light and dark theme are a family-level expectation.</p></article>
-            <article class="stack-card"><h3>Legal + Help Pages</h3><p>About, Resources, Contact, Privacy, and Terms must exist in every app.</p></article>
-            <article class="stack-card"><h3>Daily Reminder</h3><p>Users should get a reminder about the app's core value once every 24 hours when notifications are enabled.</p></article>
-            <article class="stack-card"><h3>Feedback Entry</h3><p>Every app must make it easy for users to report bugs, request features, or share ideas.</p></article>
-            <article class="stack-card"><h3>Founder Credit</h3><p>Every family app footer must clearly credit Er. Sangam Krishna as the creator.</p></article>
-          </div>
-        </div>
-      </section>
-      <section class="section">
-        <div class="container">
-          <div class="section-head">
-            <div>
-              <h2>Future Build Toolkit</h2>
-              <p>Use these docs to add future Sathi apps without breaking ecosystem consistency.</p>
-            </div>
-          </div>
-          <div class="doc-grid">
-            <article class="doc-card"><h3>Family Standard</h3><p>The rulebook for what qualifies as a Sathi app.</p><div class="app-actions" style="margin-top:1rem"><a class="solid-btn" href="/Aapka-Sathi/FAMILY_STANDARD.md">Open</a></div></article>
-            <article class="doc-card"><h3>Add New Sathi</h3><p>The repeatable workflow to create, deploy, feature, and verify a new family app.</p><div class="app-actions" style="margin-top:1rem"><a class="solid-btn" href="/Aapka-Sathi/ADD_NEW_SATHI.md">Open</a></div></article>
-            <article class="doc-card"><h3>AI Prompt Template</h3><p>Copy-paste this into any AI tool so future apps inherit the family defaults.</p><div class="app-actions" style="margin-top:1rem"><a class="solid-btn" href="/Aapka-Sathi/AI_APP_BRIEF_TEMPLATE.md">Open</a></div></article>
-          </div>
-        </div>
-      </section>
-      <section class="section">
-        <div class="container">
-          <div class="section-head">
-            <div>
-              <h2>Reminder Settings</h2>
-              <p>This saves a family-level reminder preference locally in the browser.</p>
-            </div>
-          </div>
-          <div class="settings-panel">
-            <div class="field-block">
-              <label for="notifName">Your name</label>
-              <input id="notifName" type="text" placeholder="Enter your name">
-              <p>Used inside reminder copy so family reminders feel personal.</p>
-            </div>
-            <div class="field-block">
-              <label><input id="notifToggle" type="checkbox"> Enable daily family reminder</label>
-              <p>The hub will show a notification on return visits after 24 hours if browser permission is granted.</p>
-              <div class="field-row"><button class="solid-btn" id="notifSave" type="button">Save Reminder Setting</button></div>
-              <p id="notifStatus" class="muted">No reminder preference saved yet.</p>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
+
     <footer class="site-footer">
       <div class="container">
         <div class="footer-grid">
-          <div class="footer-block"><h3>Aapka-Sathi</h3><p>The central identity layer for every focused Sathi app.</p></div>
-          <div class="footer-block"><h3>Family Pages</h3><div class="footer-links"><a href="/Aapka-Sathi/about.html">About</a><a href="/Aapka-Sathi/resources.html">Resources</a><a href="/Aapka-Sathi/contact.html">Contact</a></div></div>
-          <div class="footer-block"><h3>Legal</h3><div class="footer-links"><a href="/Aapka-Sathi/privacy-policy.html">Privacy Policy</a><a href="/Aapka-Sathi/terms.html">Terms & Conditions</a></div></div>
+          <div class="footer-block">
+            <h3>Aapka-Sathi</h3>
+            <p>Useful everyday apps ka ek growing family.</p>
+          </div>
+          <div class="footer-block">
+            <h3>Explore</h3>
+            <div class="footer-links">
+              <a href="/Aapka-Sathi/about.html">About</a>
+              <a href="/Aapka-Sathi/resources.html">Resources</a>
+              <a href="/Aapka-Sathi/contact.html">Contact</a>
+            </div>
+          </div>
+          <div class="footer-block">
+            <h3>Legal</h3>
+            <div class="footer-links">
+              <a href="/Aapka-Sathi/privacy-policy.html">Privacy Policy</a>
+              <a href="/Aapka-Sathi/terms.html">Terms & Conditions</a>
+            </div>
+          </div>
         </div>
         <div class="footer-bottom">
           <span>© <span data-current-year></span> Aapka-Sathi Family</span>
-          <span>Crafted and developed by <strong>Er. Sangam Krishna</strong> for the complete Sathi family.</span>
+          <span>Crafted and developed by <strong>Er. Sangam Krishna</strong>.</span>
         </div>
       </div>
     </footer>
   </div>
+
+  <div class="feedback-modal" id="installModal">
+    <div class="feedback-card">
+      <h2>Install Aapka-Sathi</h2>
+      <p class="muted">Hub ko phone par app ki tarah rakho, taaki poori family ek tap me mil jaye.</p>
+      <div class="field-row" style="margin-top:1rem">
+        <button class="solid-btn" id="installNowButton" type="button">Install now</button>
+        <button class="ghost-btn" id="installLaterButton" type="button">Not now</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="feedback-modal" id="notifModal">
+    <div class="feedback-card">
+      <h2>Daily Reminder</h2>
+      <p class="muted">Agar chaho to roz ek baar notification se yaad dila denge ki apna useful Sathi app open kar lo.</p>
+      <div class="field-row" style="margin-top:1rem; justify-content:flex-start;">
+        <button class="solid-btn" id="notifAllow" type="button">Allow reminder</button>
+        <button class="ghost-btn" id="notifSkip" type="button">Skip</button>
+      </div>
+      <p id="notifStatus" class="muted" style="margin-top:1rem">No reminder preference saved yet.</p>
+    </div>
+  </div>
+
   <button class="feedback-fab" id="feedbackFab" aria-label="Open feedback">💬</button>
   <div class="feedback-modal" id="feedbackModal">
     <div class="feedback-card">
@@ -169,6 +175,7 @@
       </div>
     </div>
   </div>
+
   <script type="module" src="/Aapka-Sathi/app.js"></script>
 </body>
 </html>
