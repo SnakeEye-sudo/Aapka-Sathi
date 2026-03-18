@@ -1,5 +1,5 @@
-const HUB_BASE = "/Aapka-Sathi";
-const FAMILY_APPS_URL = `${HUB_BASE}/apps/apps.json`;
+const HUB_BASE = window.location.pathname.startsWith("/Aapka-Sathi") ? "/Aapka-Sathi" : "";
+const FAMILY_APPS_URL = new URL(`${HUB_BASE}/apps/apps.json`, window.location.origin).toString();
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyC6Cpg83N8fBuvY7YOSwTWsfM9DUsaVc3E",
   authDomain: "pariksha-sathi.firebaseapp.com",
@@ -43,8 +43,16 @@ async function renderApps() {
   const container = document.getElementById("appGrid");
   if (!container) return;
 
-  const res = await fetch(FAMILY_APPS_URL);
-  const data = await res.json();
+  let data;
+  try {
+    const res = await fetch(FAMILY_APPS_URL, { cache: "no-store" });
+    if (!res.ok) throw new Error(`Registry fetch failed: ${res.status}`);
+    data = await res.json();
+  } catch (error) {
+    container.innerHTML = `<article class="app-card"><h3 class="app-name">Registry unavailable</h3><p class="app-desc">App listing abhi load nahi ho paayi. Please refresh once, ya thodi der baad dubara try karein.</p></article>`;
+    console.error(error);
+    return;
+  }
   const liveCount = data.apps.filter((app) => app.status === "LIVE").length;
   const standardCount = data.apps.filter((app) => app.sharedLogin && app.pwa).length;
 
