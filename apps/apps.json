@@ -11,7 +11,7 @@
       "url": "https://snakeeye-sudo.github.io/pariksha-sathi/",
       "status": "LIVE",
       "pwa": true,
-      "theme": false,
+      "theme": true,
       "sharedLogin": true,
       "notification": true,
       "feedback": true

@@ -47,7 +47,22 @@
         <section class="menu-panel">
           <p class="eyebrow" data-i18n="installLabel">Install</p>
           <h3 data-i18n="installTitle">Hub ko phone par rakho</h3>
-          <button class="menu-btn hidden" id="installButton" type="button" data-i18n="installAction">Install app</button>
+          <div class="menu-action-stack">
+            <button class="menu-btn hidden" id="installButton" type="button" data-i18n="installAction">Install app</button>
+            <button class="menu-btn" id="installAllButton" type="button" data-i18n="installAllAction">Install all</button>
+          </div>
+        </section>
+
+        <section class="menu-panel">
+          <p class="eyebrow" data-i18n="sharedLoginLabel">Family login</p>
+          <h3 data-i18n="sharedLoginTitle">Ek hi ID, poori family</h3>
+          <div class="login-card-mini">
+            <strong id="familyAuthName" data-i18n="authLoading">Login status load ho raha hai...</strong>
+            <span id="familyAuthEmail" class="muted" data-i18n="sharedLoginHint">Same Google login family apps me share hota hai.</span>
+          </div>
+          <div class="menu-action-stack">
+            <button class="menu-btn" id="familyAuthButton" type="button" data-i18n="authSignIn">Login with Google</button>
+          </div>
         </section>
 
         <section class="menu-panel">
@@ -107,6 +122,14 @@
               <article class="stat-card"><strong id="reminderCount">0</strong><span data-i18n="dailyReminder">Daily reminder</span></article>
             </div>
             <p class="muted" data-i18n="snapshotText">Family standard ab ye bhi kehta hai ki sabhi naye apps me Hindi/English toggle aur top-right hamburger menu hoga.</p>
+            <div class="hero-login-card">
+              <div>
+                <p class="eyebrow" data-i18n="sharedLoginLabel">Family login</p>
+                <strong id="heroAuthName" data-i18n="authLoading">Login status load ho raha hai...</strong>
+                <p id="heroAuthEmail" class="muted" data-i18n="sharedLoginHint">Same Google login family apps me share hota hai.</p>
+              </div>
+              <button class="ghost-btn" id="heroAuthButton" type="button" data-i18n="authSignIn">Login with Google</button>
+            </div>
           </aside>
         </div>
       </section>
@@ -159,6 +182,19 @@
         <button class="solid-btn" id="installNowButton" type="button" data-i18n="installNow">Install now</button>
         <button class="ghost-btn" id="installLaterButton" type="button" data-i18n="installLater">Not now</button>
       </div>
+    </div>
+  </div>
+
+  <div class="feedback-modal" id="installCenterModal">
+    <div class="feedback-card install-center-card">
+      <h2 data-i18n="installCenterTitle">Install All Family Apps</h2>
+      <p class="muted" data-i18n="installCenterText">Browser har app ka install alag confirm karta hai. Yahan se poori family ke liye guided install flow start hoga.</p>
+      <div class="field-row">
+        <button class="solid-btn" id="startFamilyInstall" type="button" data-i18n="installCenterStart">Start install flow</button>
+        <button class="ghost-btn" id="closeInstallCenter" type="button" data-i18n="feedbackClose">Close</button>
+      </div>
+      <p id="installCenterStatus" class="muted install-note" data-i18n="installGuideNote">Jo app already installed hai woh open state me dikhega.</p>
+      <div id="installCenterList" class="install-center-list"></div>
     </div>
   </div>
 

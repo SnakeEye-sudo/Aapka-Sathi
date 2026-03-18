@@ -103,7 +103,9 @@ button, input, textarea { font: inherit; }
 .drawer-head,
 .toggle-row,
 .hero-actions,
-.field-row {
+.field-row,
+.hero-login-card,
+.install-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -224,6 +226,22 @@ button, input, textarea { font: inherit; }
   background:
     radial-gradient(circle at top right, rgba(250, 204, 21, 0.14), transparent 34%),
     linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+}
+
+.hero-login-card {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 1.3rem;
+  background: rgba(255,255,255,0.03);
+  align-items: flex-start;
+}
+
+.hero-login-card strong,
+.login-card-mini strong {
+  display: block;
+  font-size: 1rem;
+  margin-top: 0.2rem;
 }
 
 .eyebrow {
@@ -458,6 +476,39 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   resize: vertical;
 }
 
+.install-center-card {
+  width: min(760px, 100%);
+}
+
+.install-note {
+  margin: 0.9rem 0 0;
+}
+
+.install-center-list {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.install-row {
+  padding: 0.95rem 1rem;
+  border-radius: 1.1rem;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.03);
+  align-items: flex-start;
+}
+
+.install-row h3 {
+  margin-bottom: 0.3rem;
+}
+
+.install-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
 .field-block {
   display: grid;
   gap: 0.55rem;
@@ -505,6 +556,20 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   background: rgba(255,255,255,0.03);
 }
 
+.menu-action-stack {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 0.7rem;
+}
+
+.login-card-mini {
+  margin-top: 0.7rem;
+  padding: 0.9rem;
+  border-radius: 1rem;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.03);
+}
+
 .icon-btn {
   width: 2.6rem;
   height: 2.6rem;
@@ -521,7 +586,9 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   .hero-panel,
   .story-grid,
   .section-head,
-  .footer-inner {
+  .footer-inner,
+  .hero-login-card,
+  .install-row {
     display: grid;
     grid-template-columns: 1fr;
   }

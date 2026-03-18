@@ -16,9 +16,12 @@ Technical constraints:
 - Must be deployable on GitHub Pages
 - Must support mobile and desktop
 - Must include both light and dark theme
+- Must follow system day/night automatically by default and sync family theme using `sathi-family-theme` and `sathi-family-theme-mode`
 - Must include a visible Hindi/English language toggle
 - Must include PWA install support and show an install popup when the app is not installed
+- Must be compatible with the family `Install All` guided flow from the hub
 - Must use the shared Firebase project pattern so Google login works across the entire Sathi family
+- Must visibly show which family user is signed in when shared login is enabled
 - Must include local reminder support for the app's core job once every 24 hours and ask for reminder permission after install or first meaningful launch
 - Must include a visible feedback action
 - Must include a visible top-right three-line hamburger menu for extra pages, settings, and legal links

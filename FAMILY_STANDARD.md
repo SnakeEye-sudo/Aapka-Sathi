@@ -11,7 +11,9 @@ Every `Sathi` app must satisfy these defaults.
    Every app must ship a `manifest.json`, service worker, install prompt, app icons, and a user-facing install popup when the app is not yet installed.
 
 3. Day/Night theme
-   Every app must support both light and dark mode with a visible theme toggle.
+   Every app must support both light and dark mode, follow system day/night automatically by default, and sync the chosen family theme across apps with the shared storage keys:
+   - `sathi-family-theme`
+   - `sathi-family-theme-mode`
 
 4. Hindi/English language toggle
    Every app must provide a visible Hindi/English toggle so users can switch language without leaving the current page.
@@ -31,10 +33,14 @@ Every `Sathi` app must satisfy these defaults.
 7. Daily reminder
    Every app must offer a user-facing notification setting, show the reminder opt-in prompt after install or first meaningful launch, and attempt one reminder every 24 hours about its core utility.
 
-8. Feedback entry point
+8. Install center compatibility
+   Every app must expose a normal PWA install flow and also work with the family `Install All` guided flow.
+   Browsers may still confirm installs one app at a time, so each app should gracefully open its own install prompt when launched from the hub.
+
+9. Feedback entry point
    Every app must expose an easy feedback action from the UI.
 
-9. Founder credit in footer
+10. Founder credit in footer
    Every app must show a clear footer credit for the creator:
    `Crafted and developed by Er. Sangam Krishna`
 
@@ -52,6 +58,8 @@ Every `Sathi` app must satisfy these defaults.
 - GitHub Pages deployable
 - Mobile responsive
 - Shared Firebase auth config
+- Visible signed-in user state
+- Shared family theme keys with system auto-follow by default
 - Hindi/English toggle
 - PWA manifest + service worker
 - Notification preference stored locally

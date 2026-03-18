@@ -1,7 +1,19 @@
 const HUB_BASE = window.location.pathname.startsWith("/Aapka-Sathi") ? "/Aapka-Sathi" : "";
 const FAMILY_APPS_URL = new URL(`${HUB_BASE}/apps/apps.json`, window.location.origin).toString();
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyC6Cpg83N8fBuvY7YOSwTWsfM9DUsaVc3E",
+  authDomain: "pariksha-sathi.firebaseapp.com",
+  projectId: "pariksha-sathi",
+  storageBucket: "pariksha-sathi.firebasestorage.app",
+  messagingSenderId: "921721697043",
+  appId: "1:921721697043:web:dada90a420c40e11ae60e6",
+  measurementId: "G-NC7955J7KV"
+};
 const STORAGE = {
   theme: "aapka-sathi-theme",
+  familyTheme: "sathi-family-theme",
+  familyThemeMode: "sathi-family-theme-mode",
+  installMarkerPrefix: "sathi-installed-",
   lang: "aapka-sathi-lang",
   notifEnabled: "aapka-sathi-notif-enabled",
   notifLastShown: "aapka-sathi-notif-last-shown",
@@ -20,6 +32,15 @@ const COPY = {
     installLabel: "Install",
     installTitle: "Hub ko phone par rakho",
     installAction: "Install app",
+    installAllAction: "Install all",
+    sharedLoginLabel: "Family login",
+    sharedLoginTitle: "Ek hi ID, poori family",
+    sharedLoginHint: "Same Google login family apps me share hota hai.",
+    authLoading: "Login status load ho raha hai...",
+    authSignIn: "Login with Google",
+    authSignOut: "Logout",
+    authSignedAs: "Signed in as",
+    authLoggedOut: "Abhi family login active nahi hai.",
     pagesLabel: "Pages",
     pagesTitle: "Info aur family links",
     pageAbout: "About",
@@ -53,6 +74,14 @@ const COPY = {
     installModalText: "Hub ko app ki tarah phone par rakho, taaki poori family ek tap me mil jaye.",
     installNow: "Install now",
     installLater: "Not now",
+    installCenterTitle: "Install All Family Apps",
+    installCenterText: "Browser har app ka install alag confirm karta hai. Yahan se guided family install flow start hoga.",
+    installCenterStart: "Start install flow",
+    installGuideNote: "Jo app already installed hai woh open state me dikhega.",
+    installQueueStatus: "Family apps ke install tabs open ho rahe hain. Browser har app ke liye alag prompt dikha sakta hai.",
+    installStateInstalled: "Installed",
+    installStateReady: "Install",
+    installStateOpen: "Open",
     notifTitle: "Daily reminder",
     notifText: "Install hone ke baad roz ek baar yaad dilaya ja sakta hai ki apna useful Sathi app open kar lo.",
     notifAllowText: "Allow reminder",
@@ -92,6 +121,15 @@ const COPY = {
     installLabel: "Install",
     installTitle: "Keep the hub on your phone",
     installAction: "Install app",
+    installAllAction: "Install all",
+    sharedLoginLabel: "Family login",
+    sharedLoginTitle: "One ID, whole family",
+    sharedLoginHint: "The same Google login works across the family apps.",
+    authLoading: "Loading login status...",
+    authSignIn: "Login with Google",
+    authSignOut: "Logout",
+    authSignedAs: "Signed in as",
+    authLoggedOut: "No family login is active right now.",
     pagesLabel: "Pages",
     pagesTitle: "Info and family links",
     pageAbout: "About",
@@ -125,6 +163,14 @@ const COPY = {
     installModalText: "Keep the hub on your phone like an app so the whole family is one tap away.",
     installNow: "Install now",
     installLater: "Not now",
+    installCenterTitle: "Install All Family Apps",
+    installCenterText: "Each browser still confirms app installs separately. This panel starts a guided family install flow.",
+    installCenterStart: "Start install flow",
+    installGuideNote: "Apps already installed will show an open state here.",
+    installQueueStatus: "Family app install tabs are opening. Your browser may still confirm each app separately.",
+    installStateInstalled: "Installed",
+    installStateReady: "Install",
+    installStateOpen: "Open",
     notifTitle: "Daily reminder",
     notifText: "After install, the hub can remind you once a day to open the useful Sathi app you need.",
     notifAllowText: "Allow reminder",
@@ -158,20 +204,68 @@ const COPY = {
 let deferredPrompt = null;
 let isInstalled = window.matchMedia("(display-mode: standalone)").matches;
 let currentLang = localStorage.getItem(STORAGE.lang) || "hi";
+let familyRegistry = [];
+let familyAuthApi = null;
+let authUser = null;
+const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 function t(key) {
   return COPY[currentLang][key];
 }
 
-function applyTheme(theme) {
-  document.body.dataset.theme = theme;
-  localStorage.setItem(STORAGE.theme, theme);
+function getInstallMarker(appId) {
+  return `${STORAGE.installMarkerPrefix}${appId}`;
+}
+
+function markInstalled(appId) {
+  localStorage.setItem(getInstallMarker(appId), "true");
+}
+
+function isAppInstalled(appId) {
+  return localStorage.getItem(getInstallMarker(appId)) === "true";
+}
+
+function getThemePreference() {
+  return localStorage.getItem(STORAGE.familyThemeMode) || localStorage.getItem(STORAGE.familyTheme) || localStorage.getItem(STORAGE.theme) || "system";
+}
+
+function resolveTheme(themePreference) {
+  if (themePreference === "system") return systemThemeQuery.matches ? "dark" : "light";
+  return themePreference === "dark" ? "dark" : "light";
+}
+
+function applyTheme(themePreference, persist = true) {
+  const resolvedTheme = resolveTheme(themePreference);
+  document.body.dataset.theme = resolvedTheme;
+  document.documentElement.dataset.theme = resolvedTheme;
+  if (persist) {
+    localStorage.setItem(STORAGE.theme, resolvedTheme);
+    localStorage.setItem(STORAGE.familyTheme, resolvedTheme);
+    localStorage.setItem(STORAGE.familyThemeMode, themePreference);
+  }
 }
 
 function initTheme() {
-  const saved = localStorage.getItem(STORAGE.theme);
-  const preferred = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  applyTheme(saved || preferred);
+  applyTheme(getThemePreference(), false);
+
+  const handleSystemThemeChange = () => {
+    if ((localStorage.getItem(STORAGE.familyThemeMode) || "system") === "system") {
+      applyTheme("system", false);
+    }
+  };
+
+  if (typeof systemThemeQuery.addEventListener === "function") {
+    systemThemeQuery.addEventListener("change", handleSystemThemeChange);
+  } else if (typeof systemThemeQuery.addListener === "function") {
+    systemThemeQuery.addListener(handleSystemThemeChange);
+  }
+
+  window.addEventListener("storage", (event) => {
+    if (event.key === STORAGE.familyTheme || event.key === STORAGE.familyThemeMode) {
+      applyTheme(getThemePreference(), false);
+    }
+  });
+
   document.getElementById("themeToggle")?.addEventListener("click", () => {
     applyTheme(document.body.dataset.theme === "dark" ? "light" : "dark");
   });
@@ -199,12 +293,16 @@ function initLanguage() {
     localStorage.setItem(STORAGE.lang, currentLang);
     applyLanguage();
     renderApps();
+    renderInstallCenter();
+    syncAuthUI(authUser);
   });
   document.getElementById("langEnBtn")?.addEventListener("click", () => {
     currentLang = "en";
     localStorage.setItem(STORAGE.lang, currentLang);
     applyLanguage();
     renderApps();
+    renderInstallCenter();
+    syncAuthUI(authUser);
   });
 }
 
@@ -229,6 +327,7 @@ async function renderApps() {
     const res = await fetch(FAMILY_APPS_URL, { cache: "no-store" });
     if (!res.ok) throw new Error(`Registry fetch failed: ${res.status}`);
     const data = await res.json();
+    familyRegistry = data.apps;
 
     document.getElementById("liveCount").textContent = String(data.apps.filter((app) => app.status === "LIVE").length);
     document.getElementById("familyCount").textContent = String(data.apps.length);
@@ -256,10 +355,141 @@ async function renderApps() {
         <a class="solid-btn" href="${app.url}" target="_blank" rel="noopener noreferrer">${t("appOpen")}</a>
       </article>
     `).join("");
+    renderInstallCenter();
   } catch (error) {
     container.innerHTML = `<article class="app-card"><h3>Apps could not load</h3><p>${currentLang === "hi" ? "Thodi der baad refresh karke dubara try karo." : "Please refresh and try again in a moment."}</p></article>`;
     console.error(error);
   }
+}
+
+function syncAuthUI(user) {
+  const displayName = user?.displayName || user?.email || "";
+  const authName = user ? `${t("authSignedAs")} ${displayName}` : t("authLoggedOut");
+  const authEmail = user?.email || t("sharedLoginHint");
+  ["familyAuthName", "heroAuthName"].forEach((id) => {
+    const node = document.getElementById(id);
+    if (node) node.textContent = authName;
+  });
+  ["familyAuthEmail", "heroAuthEmail"].forEach((id) => {
+    const node = document.getElementById(id);
+    if (node) node.textContent = authEmail;
+  });
+  ["familyAuthButton", "heroAuthButton"].forEach((id) => {
+    const button = document.getElementById(id);
+    if (!button) return;
+    button.textContent = user ? t("authSignOut") : t("authSignIn");
+    button.onclick = async () => {
+      if (!familyAuthApi) return;
+      if (authUser) {
+        await familyAuthApi.signOut(familyAuthApi.auth);
+      } else {
+        await familyAuthApi.signInWithPopup(familyAuthApi.auth, familyAuthApi.provider);
+      }
+    };
+  });
+}
+
+async function initFamilyAuth() {
+  try {
+    const firebaseApp = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js");
+    const firebaseAuth = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js");
+    const app = firebaseApp.initializeApp(FIREBASE_CONFIG, "aapka-sathi-family-hub");
+    const auth = firebaseAuth.getAuth(app);
+    const provider = new firebaseAuth.GoogleAuthProvider();
+    familyAuthApi = {
+      auth,
+      provider,
+      signInWithPopup: firebaseAuth.signInWithPopup,
+      signOut: firebaseAuth.signOut
+    };
+    firebaseAuth.onAuthStateChanged(auth, (user) => {
+      authUser = user;
+      syncAuthUI(user);
+    });
+  } catch (error) {
+    console.error("Family auth failed", error);
+    syncAuthUI(null);
+  }
+}
+
+function openInstallCenter() {
+  renderInstallCenter();
+  document.getElementById("installCenterModal")?.classList.add("open");
+}
+
+function closeInstallCenter() {
+  document.getElementById("installCenterModal")?.classList.remove("open");
+}
+
+async function triggerHubInstall() {
+  if (!deferredPrompt) {
+    alert(t("installUnavailable"));
+    return false;
+  }
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  return true;
+}
+
+async function handleSingleAppInstall(app) {
+  if (app.id === "aapka-sathi") {
+    await triggerHubInstall();
+    return;
+  }
+  window.open(`${app.url}${app.url.includes("?") ? "&" : "?"}family-install=1`, "_blank", "noopener,noreferrer");
+}
+
+function renderInstallCenter() {
+  const list = document.getElementById("installCenterList");
+  if (!list) return;
+  if (!familyRegistry.length) {
+    list.innerHTML = "";
+    return;
+  }
+
+  list.innerHTML = familyRegistry.map((app) => {
+    const installed = isAppInstalled(app.id);
+    return `
+      <article class="install-row">
+        <div>
+          <h3>${app.name}</h3>
+          <p class="muted">${t("appMood")[app.id] || app.tagline}</p>
+        </div>
+        <div class="install-row-actions">
+          <span class="status-pill">${installed ? t("installStateInstalled") : t("installStateReady")}</span>
+          <button class="ghost-btn" type="button" data-install-app="${app.id}">${installed ? t("installStateOpen") : t("installStateReady")}</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  list.querySelectorAll("[data-install-app]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const app = familyRegistry.find((entry) => entry.id === button.dataset.installApp);
+      if (!app) return;
+      if (isAppInstalled(app.id)) {
+        window.open(app.url, "_blank", "noopener,noreferrer");
+        return;
+      }
+      await handleSingleAppInstall(app);
+    });
+  });
+}
+
+function initInstallCenter() {
+  document.getElementById("installAllButton")?.addEventListener("click", openInstallCenter);
+  document.getElementById("closeInstallCenter")?.addEventListener("click", closeInstallCenter);
+  document.getElementById("installCenterModal")?.addEventListener("click", (event) => {
+    if (event.target?.id === "installCenterModal") closeInstallCenter();
+  });
+  document.getElementById("startFamilyInstall")?.addEventListener("click", async () => {
+    const status = document.getElementById("installCenterStatus");
+    for (const app of familyRegistry.filter((entry) => entry.pwa)) {
+      if (isAppInstalled(app.id)) continue;
+      await handleSingleAppInstall(app);
+    }
+    if (status) status.textContent = t("installQueueStatus");
+  });
 }
 
 function openDrawer() {
@@ -281,6 +511,8 @@ function initDrawer() {
 }
 
 function initPwa() {
+  if (isInstalled) markInstalled("aapka-sathi");
+
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register(`${HUB_BASE}/sw.js`).catch(() => {});
@@ -296,25 +528,18 @@ function initPwa() {
 
   window.addEventListener("appinstalled", () => {
     isInstalled = true;
+    markInstalled("aapka-sathi");
     document.getElementById("installModal")?.classList.remove("open");
     document.getElementById("installButton")?.classList.add("hidden");
+    renderInstallCenter();
     if (localStorage.getItem(STORAGE.notifAsked) !== "true") {
       document.getElementById("notifModal")?.classList.add("open");
     }
   });
 
-  async function triggerInstall() {
-    if (!deferredPrompt) {
-      alert(t("installUnavailable"));
-      return;
-    }
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-  }
-
-  document.getElementById("installButton")?.addEventListener("click", triggerInstall);
-  document.getElementById("heroInstallButton")?.addEventListener("click", triggerInstall);
-  document.getElementById("installNowButton")?.addEventListener("click", triggerInstall);
+  document.getElementById("installButton")?.addEventListener("click", triggerHubInstall);
+  document.getElementById("heroInstallButton")?.addEventListener("click", triggerHubInstall);
+  document.getElementById("installNowButton")?.addEventListener("click", triggerHubInstall);
   document.getElementById("installLaterButton")?.addEventListener("click", () => {
     document.getElementById("installModal")?.classList.remove("open");
   });
@@ -393,8 +618,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
   initLanguage();
   initDrawer();
+  initInstallCenter();
   initPwa();
   initNotifications();
   initFeedback();
+  await initFamilyAuth();
   await renderApps();
 });
