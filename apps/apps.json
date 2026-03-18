@@ -1,0 +1,48 @@
+{
+  "familyName": "Aapka-Sathi",
+  "tagline": "One family. Many focused Sathi apps.",
+  "apps": [
+    {
+      "id": "pariksha-sathi",
+      "name": "Pariksha Sathi",
+      "emoji": "📚",
+      "tagline": "Plan your preparation, day by day.",
+      "description": "Study planner for competitive exams with exam registry, syllabus-aware planning, PDF export, checklist, streaks, and cloud sync.",
+      "url": "https://snakeeye-sudo.github.io/pariksha-sathi/",
+      "status": "LIVE",
+      "pwa": true,
+      "theme": false,
+      "sharedLogin": true,
+      "notification": true,
+      "feedback": true
+    },
+    {
+      "id": "rozgar-sathi",
+      "name": "Rozgar Sathi",
+      "emoji": "💼",
+      "tagline": "Government jobs in one place.",
+      "description": "Sarkari jobs portal with vacancy listing, resume builder, application tracker, shared Google login, and PWA install support.",
+      "url": "https://snakeeye-sudo.github.io/rozgar-sathi/",
+      "status": "LIVE",
+      "pwa": true,
+      "theme": true,
+      "sharedLogin": true,
+      "notification": false,
+      "feedback": false
+    },
+    {
+      "id": "samachar-sathi",
+      "name": "Samachar Sathi",
+      "emoji": "🗞️",
+      "tagline": "Daily current affairs intelligence.",
+      "description": "Current affairs and daily analysis app with local vault storage, archive flow, admin import, shared auth hooks, and PWA support.",
+      "url": "https://snakeeye-sudo.github.io/Samachar-Sathi/",
+      "status": "LIVE",
+      "pwa": true,
+      "theme": true,
+      "sharedLogin": true,
+      "notification": true,
+      "feedback": false
+    }
+  ]
+}

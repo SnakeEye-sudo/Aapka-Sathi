@@ -1,0 +1,20 @@
+{
+  "name": "Aapka-Sathi",
+  "short_name": "Aapka-Sathi",
+  "description": "Central ecosystem hub for the Sathi family of focused apps.",
+  "start_url": "/Aapka-Sathi/",
+  "scope": "/Aapka-Sathi/",
+  "display": "standalone",
+  "background_color": "#f7f4ee",
+  "theme_color": "#d97706",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/Aapka-Sathi/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
