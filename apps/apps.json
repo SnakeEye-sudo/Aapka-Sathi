@@ -33,7 +33,7 @@
     {
       "id": "samachar-sathi",
       "name": "Samachar Sathi",
-      "emoji": "🗞️",
+      "emoji": "📰",
       "tagline": "Daily current affairs intelligence.",
       "description": "Current affairs and daily analysis app with local vault storage, archive flow, admin import, shared auth hooks, and PWA support.",
       "url": "https://snakeeye-sudo.github.io/Samachar-Sathi/",
@@ -47,7 +47,7 @@
     {
       "id": "hisaab-sathi",
       "name": "Hisaab Sathi",
-      "emoji": "HS",
+      "emoji": "💰",
       "tagline": "Daily finance and udhar ledger in one place.",
       "description": "Expense, income, udhar given, udhar returned, Gmail backup fallback, reminder support, and mobile-first ledger flow.",
       "url": "https://snakeeye-sudo.github.io/Hisaab-Sathi/",
@@ -61,7 +61,7 @@
     {
       "id": "antariksh-sathi",
       "name": "Antariksh Sathi",
-      "emoji": "AS",
+      "emoji": "🌌",
       "tagline": "Sky events, ISRO watch, and stargazing in one orbit.",
       "description": "Offline-first space companion with meteor showers, eclipse markers, ISRO mission watch, India stargazing spots by state, agency directory, and a student curiosity lab.",
       "url": "https://snakeeye-sudo.github.io/Antariksh-Sathi/",
