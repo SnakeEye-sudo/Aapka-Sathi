@@ -57,6 +57,20 @@
       "sharedLogin": true,
       "notification": true,
       "feedback": true
+    },
+    {
+      "id": "antariksh-sathi",
+      "name": "Antariksh Sathi",
+      "emoji": "AS",
+      "tagline": "Sky events, ISRO watch, and stargazing in one orbit.",
+      "description": "Offline-first space companion with meteor showers, eclipse markers, ISRO mission watch, India stargazing spots by state, agency directory, and a student curiosity lab.",
+      "url": "https://snakeeye-sudo.github.io/Antariksh-Sathi/",
+      "status": "LIVE",
+      "pwa": true,
+      "theme": true,
+      "sharedLogin": false,
+      "notification": true,
+      "feedback": true
     }
   ]
 }
