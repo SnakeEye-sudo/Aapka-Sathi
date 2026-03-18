@@ -27,11 +27,16 @@ Every `Sathi` app must satisfy these defaults.
 6. Feedback entry point
    Every app must expose an easy feedback action from the UI.
 
+7. Founder credit in footer
+   Every app must show a clear footer credit for the creator:
+   `Crafted and developed by Er. Sangam Krishna`
+
 ## Family UX Requirements
 
 - Show `Part of Aapka-Sathi Family` visibly in header, footer, or hero
 - Provide a link back to the central hub
 - Provide sibling app links
+- Show the founder credit cleanly in the footer, not hidden or tiny
 - Keep branding family-consistent while preserving each app's personality
 
 ## Technical Baseline

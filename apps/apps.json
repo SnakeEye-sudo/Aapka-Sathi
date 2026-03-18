@@ -43,6 +43,20 @@
       "sharedLogin": true,
       "notification": true,
       "feedback": false
+    },
+    {
+      "id": "hisaab-sathi",
+      "name": "Hisaab Sathi",
+      "emoji": "HS",
+      "tagline": "Daily finance and udhar ledger in one place.",
+      "description": "Expense, income, udhar given, udhar returned, Gmail backup fallback, reminder support, and mobile-first ledger flow.",
+      "url": "https://snakeeye-sudo.github.io/Hisaab-Sathi/",
+      "status": "LIVE",
+      "pwa": true,
+      "theme": true,
+      "sharedLogin": true,
+      "notification": true,
+      "feedback": true
     }
   ]
 }

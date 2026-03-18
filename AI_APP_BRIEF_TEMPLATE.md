@@ -27,6 +27,7 @@ Technical constraints:
   - Privacy Policy
   - Terms & Conditions
 - Must include `Part of Aapka-Sathi Family` branding and a link back to the central hub
+- Must show a clear footer credit: `Crafted and developed by Er. Sangam Krishna`
 
 Also produce:
 
