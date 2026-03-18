@@ -350,6 +350,8 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   padding: 1rem;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-card::before {
@@ -409,6 +411,14 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   margin: 0.9rem 0 1rem;
 }
 
+.app-card .solid-btn {
+  width: 100%;
+  margin-top: auto;
+  border-radius: 1.15rem;
+  padding: 0.92rem 1rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+}
+
 .feature-pill {
   background: rgba(255,255,255,0.03);
 }
@@ -421,6 +431,21 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   border-top: 1px solid var(--line);
   padding-top: 1rem;
   flex-wrap: wrap;
+}
+
+.footer-credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.04);
+}
+
+.footer-credit-label {
+  color: var(--muted);
+  font-size: 0.92rem;
 }
 
 .feedback-fab {

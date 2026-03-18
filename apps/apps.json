@@ -68,7 +68,7 @@
       "status": "LIVE",
       "pwa": true,
       "theme": true,
-      "sharedLogin": false,
+      "sharedLogin": true,
       "notification": true,
       "feedback": true
     }

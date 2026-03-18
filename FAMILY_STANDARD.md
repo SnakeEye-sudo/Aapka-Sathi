@@ -2,6 +2,11 @@
 
 Every `Sathi` app must satisfy these defaults.
 
+## Forward Rule
+
+The apps already built in the family do not need to be rewritten to satisfy the new stack rule.
+This rule applies to all future family apps.
+
 ## Mandatory Defaults
 
 1. Shared login
@@ -64,3 +69,13 @@ Every `Sathi` app must satisfy these defaults.
 - PWA manifest + service worker
 - Notification preference stored locally
 - Feedback entry available in UI
+
+## Future Build Rule
+
+- All new family apps should be TypeScript-first unless there is a very strong product reason to use another advanced stack
+- New apps should not feel like repetitive plain JavaScript clones
+- Stack variety is welcome, but quality is mandatory
+- Design quality must be top-tier, mobile-first, and visually alive
+- CSS should be crafted at a premium level, not just utility-default styling
+- Each new app should have its own personality while still feeling part of the Sathi family
+- App names should keep the `xyz-sathi` family naming pattern

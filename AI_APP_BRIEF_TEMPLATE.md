@@ -22,6 +22,8 @@ Technical constraints:
 - Must be compatible with the family `Install All` guided flow from the hub
 - Must use the shared Firebase project pattern so Google login works across the entire Sathi family
 - Must visibly show which family user is signed in when shared login is enabled
+- For future apps, default to TypeScript-first implementation and use the strongest suitable modern stack for the product
+- The app should have its own premium visual identity and should not feel like a reused plain JavaScript shell
 - Must include local reminder support for the app's core job once every 24 hours and ask for reminder permission after install or first meaningful launch
 - Must include a visible feedback action
 - Must include a visible top-right three-line hamburger menu for extra pages, settings, and legal links
