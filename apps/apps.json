@@ -71,6 +71,20 @@
       "sharedLogin": true,
       "notification": true,
       "feedback": true
+    },
+    {
+      "id": "ganit-sathi",
+      "name": "Ganit Sathi",
+      "emoji": "🧮",
+      "tagline": "Calculator, converters, and age utility in one premium studio.",
+      "description": "TypeScript-first utility app with normal and scientific calculator, daily currency sync, multi-category unit conversion, age calculator, shared family login, and cloud-ready preferences.",
+      "url": "https://snakeeye-sudo.github.io/Ganit-Sathi/",
+      "status": "LIVE",
+      "pwa": true,
+      "theme": true,
+      "sharedLogin": true,
+      "notification": true,
+      "feedback": true
     }
   ]
 }
