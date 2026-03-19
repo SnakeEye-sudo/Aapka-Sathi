@@ -997,7 +997,6 @@ function bindAppActionButtons(scope = document) {
       window.open(app.url, "_blank", "noopener,noreferrer");
       renderRecentApps();
       renderFamilyHighlights();
-      renderRecommendedApps(getFilteredApps());
       updateBackupSummary();
     });
   });
@@ -1011,7 +1010,6 @@ function bindAppActionButtons(scope = document) {
         window.open(app.url, "_blank", "noopener,noreferrer");
         renderRecentApps();
         renderFamilyHighlights();
-        renderRecommendedApps(getFilteredApps());
         updateBackupSummary();
         return;
       }
@@ -1052,13 +1050,6 @@ function renderRecentApps() {
   bindAppActionButtons(container);
 }
 
-function renderRecommendedApps(apps) {
-  const container = document.getElementById("recommendedApps");
-  if (!container) return;
-  const recommended = getRecommendedApps(apps);
-  container.innerHTML = recommended.map((app) => buildAppCard(app, true)).join("");
-  bindAppActionButtons(container);
-}
 
 async function renderApps() {
   const container = document.getElementById("appGrid");
@@ -1076,7 +1067,6 @@ async function renderApps() {
     renderCategoryFilters();
     renderFamilyHighlights();
     renderRecentApps();
-    renderRecommendedApps(filteredApps);
 
     if (!filteredApps.length) {
       container.innerHTML = `
@@ -1343,7 +1333,6 @@ function initPwa() {
     if (event.key.startsWith("sathi-last-opened-")) {
       renderRecentApps();
       renderFamilyHighlights();
-      renderRecommendedApps(getFilteredApps());
       return;
     }
     if (event.key === "aapka-sathi-last-backup-at") {

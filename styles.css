@@ -10,8 +10,9 @@
   --accent-3: #facc15;
   --accent-4: #14b8a6;
   --page: linear-gradient(180deg, #fff7ef 0%, #fff0df 52%, #fff8f2 100%);
-  --card-shadow: 0 26px 70px rgba(201, 108, 37, 0.14);
-  --hero-shadow: 0 32px 110px rgba(249, 115, 22, 0.18);
+  --card-shadow: 0 16px 40px rgba(201, 108, 37, 0.08), 0 4px 12px rgba(201,108,37,0.05);
+  --hero-shadow: 0 24px 80px rgba(249, 115, 22, 0.15);
+  --hover-shadow: 0 24px 60px rgba(201, 108, 37, 0.15), 0 8px 24px rgba(201,108,37,0.1);
   --font-display: "Sora", "Segoe UI", sans-serif;
   --font-body: "Manrope", "Segoe UI", sans-serif;
 }
@@ -24,8 +25,9 @@ body[data-theme="dark"] {
   --text: #eef2f6;
   --muted: #9ca8b4;
   --page: linear-gradient(180deg, #0e1419 0%, #141b21 52%, #10161c 100%);
-  --card-shadow: 0 26px 70px rgba(0, 0, 0, 0.34);
-  --hero-shadow: 0 34px 110px rgba(249, 115, 22, 0.16);
+  --card-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0,0,0,0.2);
+  --hero-shadow: 0 24px 80px rgba(249, 115, 22, 0.12);
+  --hover-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0,0,0,0.3);
 }
 
 * { box-sizing: border-box; }
@@ -199,9 +201,16 @@ button, input, textarea { font: inherit; }
 .feedback-card,
 .drawer-card {
   border: 1px solid var(--line);
-  border-radius: 2rem;
+  border-radius: 1.5rem;
   background: var(--surface-strong);
   box-shadow: var(--card-shadow);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease;
+}
+
+.story-card:hover, .app-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: var(--hover-shadow);
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
 }
 
 .hero-panel {
@@ -290,6 +299,11 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
   color: #fff;
   border-color: transparent;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+}
+
+.solid-btn:hover {
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
 }
 
 .mini-toggle.active {
