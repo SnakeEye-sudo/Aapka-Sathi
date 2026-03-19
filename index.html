@@ -54,6 +54,15 @@
         </section>
 
         <section class="menu-panel">
+          <p class="eyebrow" data-i18n="backupLabel">Backup</p>
+          <h3 data-i18n="backupTitle">Family data save aur restore</h3>
+          <p class="muted" id="backupSummary" data-i18n="backupSummary">Poore ecosystem ka local data yahan se ek file me save kiya ja sakta hai.</p>
+          <div class="menu-action-stack">
+            <button class="menu-btn" id="openBackupButton" type="button" data-i18n="backupAction">Backup</button>
+          </div>
+        </section>
+
+        <section class="menu-panel">
           <p class="eyebrow" data-i18n="sharedLoginLabel">Family login</p>
           <h3 data-i18n="sharedLoginTitle">Ek hi ID, poori family</h3>
           <div class="login-card-mini">
@@ -110,6 +119,7 @@
             <div class="hero-actions">
               <a class="solid-btn" href="#apps" data-i18n="heroCta">Apps dekho</a>
               <button class="ghost-btn" id="heroInstallButton" type="button" data-i18n="heroInstall">Install hub</button>
+              <button class="ghost-btn" id="heroBackupButton" type="button" data-i18n="backupAction">Backup</button>
             </div>
           </div>
 
@@ -118,8 +128,8 @@
             <div class="hero-stats">
               <article class="stat-card"><strong id="liveCount">0</strong><span data-i18n="liveApps">Live apps</span></article>
               <article class="stat-card"><strong id="familyCount">0</strong><span data-i18n="totalApps">Total apps</span></article>
-              <article class="stat-card"><strong id="pwaCount">0</strong><span data-i18n="installReady">Install ready</span></article>
-              <article class="stat-card"><strong id="reminderCount">0</strong><span data-i18n="dailyReminder">Daily reminder</span></article>
+              <article class="stat-card"><strong id="pwaCount">0</strong><span data-i18n="installedApps">Installed apps</span></article>
+              <article class="stat-card"><strong id="reminderCount">0</strong><span data-i18n="notInstalledApps">Not installed</span></article>
             </div>
             <p class="muted" data-i18n="snapshotText">Family standard ab ye bhi kehta hai ki sabhi naye apps me Hindi/English toggle aur top-right hamburger menu hoga.</p>
             <div class="hero-login-card">
@@ -214,6 +224,30 @@
   </div>
 
   <button class="feedback-fab" id="feedbackFab" aria-label="Open feedback">✦</button>
+  <div class="feedback-modal" id="backupModal">
+    <div class="feedback-card install-center-card">
+      <h2 data-i18n="backupModalTitle">Family Backup</h2>
+      <p class="muted" data-i18n="backupModalText">Ek JSON backup file me poore ecosystem ka local data save karo aur isi hub se restore bhi karo.</p>
+      <div class="backup-stat-grid">
+        <article class="stat-card">
+          <strong id="backupAppCount">0</strong>
+          <span data-i18n="backupAppsTracked">Apps tracked</span>
+        </article>
+        <article class="stat-card">
+          <strong id="backupKeyCount">0</strong>
+          <span data-i18n="backupItemsSaved">Saved items</span>
+        </article>
+      </div>
+      <div class="field-row">
+        <button class="solid-btn" id="backupExportButton" type="button" data-i18n="backupCreate">Create backup</button>
+        <button class="ghost-btn" id="backupImportButton" type="button" data-i18n="backupRestore">Restore backup</button>
+        <button class="ghost-btn" id="backupCloseButton" type="button" data-i18n="feedbackClose">Close</button>
+      </div>
+      <input id="backupFileInput" class="hidden" type="file" accept=".json,application/json">
+      <p id="backupStatus" class="muted install-note" data-i18n="backupStatusIdle">Backup file yahan se share ya download ki ja sakti hai.</p>
+    </div>
+  </div>
+
   <div class="feedback-modal" id="feedbackModal">
     <div class="feedback-card">
       <h2 data-i18n="feedbackTitle">Family feedback</h2>

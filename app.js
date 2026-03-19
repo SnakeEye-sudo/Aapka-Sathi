@@ -19,6 +19,40 @@ const STORAGE = {
   notifLastShown: "aapka-sathi-notif-last-shown",
   notifAsked: "aapka-sathi-notif-asked"
 };
+const BACKUP_SCHEMA_VERSION = 1;
+const BACKUP_PREFIX_PATTERNS = [
+  /^aapka-sathi-/,
+  /^ganit-/,
+  /^sikka-/,
+  /^dhyan-/,
+  /^khel-/,
+  /^paltu-/,
+  /^panchang-/,
+  /^ank-/,
+  /^jal-/,
+  /^mann-/,
+  /^sanket-/,
+  /^dastavez-/,
+  /^rozgar-/,
+  /^pariksha_/,
+  /^ps_/,
+  /^hs-/,
+  /^as-/,
+  /^pragya-/,
+  /^ss_/,
+  /^sathi-family-theme/,
+  /^vite-ui-theme$/
+];
+const BACKUP_EXCLUDE_PATTERNS = [
+  /^sathi-installed-/,
+  /:notification-prompt-/,
+  /pwa-dismissed/i
+];
+const BACKUP_INDEXEDDB_CONFIG = {
+  name: "samachar-sathi-vault",
+  version: 2,
+  stores: ["analyses"]
+};
 
 const COPY = {
   hi: {
@@ -33,6 +67,10 @@ const COPY = {
     installTitle: "Hub ko phone par rakho",
     installAction: "Install app",
     installAllAction: "Install all",
+    backupLabel: "Backup",
+    backupTitle: "Family data save aur restore",
+    backupAction: "Backup",
+    backupSummary: "Poore ecosystem ka local data yahan se ek file me save kiya ja sakta hai.",
     sharedLoginLabel: "Family login",
     sharedLoginTitle: "Ek hi ID, poori family",
     sharedLoginHint: "Same Google login family apps me share hota hai.",
@@ -59,7 +97,9 @@ const COPY = {
     totalApps: "Total apps",
     installReady: "Install ready",
     dailyReminder: "Daily reminder",
-    snapshotText: "Ek jagah se poori Sathi family ka clean access, install aur login control milta hai.",
+    installedApps: "Installed apps",
+    notInstalledApps: "Not installed",
+    snapshotText: "Yahin se install progress dekho, fast updates lo, aur family data ka backup banao.",
     storyLabelOne: "Simple",
     storyTitleOne: "User ko sirf useful cheez dikhe",
     storyTextOne: "Yahan bas wahi cheez dikhe jo user ko app choose karne me help kare. Seedha kaam, seedhi clarity.",
@@ -82,6 +122,20 @@ const COPY = {
     installStateInstalled: "Installed",
     installStateReady: "Install",
     installStateOpen: "Open",
+    backupModalTitle: "Family Backup",
+    backupModalText: "Ek JSON backup file me poore ecosystem ka local data save karo aur isi hub se restore bhi karo.",
+    backupAppsTracked: "Apps tracked",
+    backupItemsSaved: "Saved items",
+    backupCreate: "Create backup",
+    backupRestore: "Restore backup",
+    backupStatusIdle: "Backup file yahan se share ya download ki ja sakti hai.",
+    backupStatusPreparing: "Backup file taiyar ho rahi hai...",
+    backupStatusDownloaded: "Backup file download ho gayi. Isse kahin bhi share kar sakte ho.",
+    backupStatusShared: "Backup file share ho gayi.",
+    backupStatusRestoring: "Backup restore ho raha hai...",
+    backupStatusRestored: "Backup restore ho gaya. Family data wapas load ho chuka hai.",
+    backupStatusInvalid: "Yeh valid Aapka-Sathi backup file nahi lag rahi.",
+    backupStatusError: "Backup process complete nahi ho paya. Dobara try karo.",
     notifTitle: "Daily reminder",
     notifText: "Install hone ke baad roz ek baar yaad dilaya ja sakta hai ki apna useful Sathi app open kar lo.",
     notifAllowText: "Allow reminder",
@@ -123,6 +177,10 @@ const COPY = {
     installTitle: "Keep the hub on your phone",
     installAction: "Install app",
     installAllAction: "Install all",
+    backupLabel: "Backup",
+    backupTitle: "Save and restore family data",
+    backupAction: "Backup",
+    backupSummary: "Save the whole ecosystem's local data into one portable file.",
     sharedLoginLabel: "Family login",
     sharedLoginTitle: "One ID, whole family",
     sharedLoginHint: "The same Google login works across the family apps.",
@@ -149,7 +207,9 @@ const COPY = {
     totalApps: "Total apps",
     installReady: "Install ready",
     dailyReminder: "Daily reminder",
-    snapshotText: "One place to manage clean access, install flow, and login state across the Sathi family.",
+    installedApps: "Installed apps",
+    notInstalledApps: "Not installed",
+    snapshotText: "Track install progress, get fresher updates, and manage family backups from one place.",
     storyLabelOne: "Simple",
     storyTitleOne: "Only useful things should be visible",
     storyTextOne: "The hub should only show what helps the user choose the right app quickly and confidently.",
@@ -172,6 +232,20 @@ const COPY = {
     installStateInstalled: "Installed",
     installStateReady: "Install",
     installStateOpen: "Open",
+    backupModalTitle: "Family Backup",
+    backupModalText: "Create one JSON backup for the ecosystem's local data and restore it again from this hub.",
+    backupAppsTracked: "Apps tracked",
+    backupItemsSaved: "Saved items",
+    backupCreate: "Create backup",
+    backupRestore: "Restore backup",
+    backupStatusIdle: "The backup file can be shared or downloaded from here.",
+    backupStatusPreparing: "Preparing the backup file...",
+    backupStatusDownloaded: "Backup file downloaded. You can share it anywhere.",
+    backupStatusShared: "Backup file shared.",
+    backupStatusRestoring: "Restoring backup...",
+    backupStatusRestored: "Backup restored. Family data is available again.",
+    backupStatusInvalid: "This does not look like a valid Aapka-Sathi backup file.",
+    backupStatusError: "The backup process could not finish. Please try again.",
     notifTitle: "Daily reminder",
     notifText: "After install, the hub can remind you once a day to open the useful Sathi app you need.",
     notifAllowText: "Allow reminder",
@@ -321,6 +395,207 @@ function appDescription(app) {
   return map[app.id] || app.description;
 }
 
+function getInstalledCounts(apps = familyRegistry) {
+  const installed = apps.filter((app) => isAppInstalled(app.id)).length;
+  return {
+    installed,
+    notInstalled: Math.max(apps.length - installed, 0)
+  };
+}
+
+function updateFamilySnapshot(apps = familyRegistry) {
+  if (!apps.length) return;
+  const { installed, notInstalled } = getInstalledCounts(apps);
+  document.getElementById("liveCount").textContent = String(apps.filter((app) => app.status === "LIVE").length);
+  document.getElementById("familyCount").textContent = String(apps.length);
+  document.getElementById("pwaCount").textContent = String(installed);
+  document.getElementById("reminderCount").textContent = String(notInstalled);
+}
+
+function shouldBackupLocalStorageKey(key) {
+  return BACKUP_PREFIX_PATTERNS.some((pattern) => pattern.test(key))
+    && !BACKUP_EXCLUDE_PATTERNS.some((pattern) => pattern.test(key));
+}
+
+function collectLocalStorageBackup() {
+  const data = {};
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const key = localStorage.key(index);
+    if (!key || !shouldBackupLocalStorageKey(key)) continue;
+    data[key] = localStorage.getItem(key);
+  }
+  return data;
+}
+
+function openIndexedDb(name, version) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(name, version);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains("analyses")) {
+        const store = db.createObjectStore("analyses", { keyPath: "metadata.date" });
+        store.createIndex("by-date", "metadata.date");
+      }
+      if (db.objectStoreNames.contains("quizzes")) db.deleteObjectStore("quizzes");
+      if (db.objectStoreNames.contains("results")) db.deleteObjectStore("results");
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("IndexedDB open failed"));
+  });
+}
+
+async function collectIndexedDbBackup() {
+  if (!("indexedDB" in window)) return {};
+
+  try {
+    const db = await openIndexedDb(BACKUP_INDEXEDDB_CONFIG.name, BACKUP_INDEXEDDB_CONFIG.version);
+    const payload = {};
+    await Promise.all(BACKUP_INDEXEDDB_CONFIG.stores.map((storeName) => new Promise((resolve, reject) => {
+      if (!db.objectStoreNames.contains(storeName)) {
+        payload[storeName] = [];
+        resolve();
+        return;
+      }
+      const request = db.transaction(storeName, "readonly").objectStore(storeName).getAll();
+      request.onsuccess = () => {
+        payload[storeName] = request.result || [];
+        resolve();
+      };
+      request.onerror = () => reject(request.error || new Error(`IndexedDB read failed for ${storeName}`));
+    })));
+    db.close();
+    return payload;
+  } catch (error) {
+    console.error("IndexedDB backup failed", error);
+    return {};
+  }
+}
+
+async function buildBackupPayload() {
+  const localData = collectLocalStorageBackup();
+  const indexedDb = await collectIndexedDbBackup();
+  const indexedDbItemCount = Object.values(indexedDb).reduce((sum, items) => sum + (Array.isArray(items) ? items.length : 0), 0);
+
+  return {
+    ecosystem: "aapka-sathi-family",
+    version: BACKUP_SCHEMA_VERSION,
+    createdAt: new Date().toISOString(),
+    appsTracked: familyRegistry.map((app) => app.id),
+    localStorage: localData,
+    indexedDb,
+    stats: {
+      localStorageItems: Object.keys(localData).length,
+      indexedDbItems: indexedDbItemCount
+    }
+  };
+}
+
+function updateBackupSummary() {
+  const summaryNode = document.getElementById("backupSummary");
+  const appCountNode = document.getElementById("backupAppCount");
+  const keyCountNode = document.getElementById("backupKeyCount");
+  const localStorageCount = Object.keys(collectLocalStorageBackup()).length;
+
+  if (appCountNode) appCountNode.textContent = String(familyRegistry.length);
+  if (keyCountNode) keyCountNode.textContent = String(localStorageCount);
+
+  if (summaryNode) {
+    const { installed, notInstalled } = getInstalledCounts();
+    summaryNode.textContent = currentLang === "hi"
+      ? `${installed} apps installed, ${notInstalled} baaki. Backup me family ka local data save hoga.`
+      : `${installed} apps installed, ${notInstalled} left. The backup will include the family's local data.`;
+  }
+}
+
+function setBackupStatus(copyKey) {
+  const node = document.getElementById("backupStatus");
+  if (node) node.textContent = t(copyKey);
+}
+
+function downloadBackupFile(file) {
+  const url = URL.createObjectURL(file);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = file.name;
+  anchor.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+async function exportFamilyBackup() {
+  setBackupStatus("backupStatusPreparing");
+  const payload = await buildBackupPayload();
+  document.getElementById("backupAppCount").textContent = String(payload.appsTracked.length);
+  document.getElementById("backupKeyCount").textContent = String(payload.stats.localStorageItems + payload.stats.indexedDbItems);
+
+  const dateStamp = payload.createdAt.slice(0, 10);
+  const text = JSON.stringify(payload, null, 2);
+  const file = new File([text], `aapka-sathi-backup-${dateStamp}.json`, { type: "application/json" });
+
+  try {
+    if (navigator.canShare?.({ files: [file] })) {
+      await navigator.share({
+        title: "Aapka-Sathi backup",
+        text: currentLang === "hi" ? "Family ecosystem backup" : "Family ecosystem backup",
+        files: [file]
+      });
+      setBackupStatus("backupStatusShared");
+      return;
+    }
+  } catch (error) {
+    console.error("Backup share skipped", error);
+  }
+
+  downloadBackupFile(file);
+  setBackupStatus("backupStatusDownloaded");
+}
+
+async function restoreIndexedDbBackup(indexedDbBackup) {
+  if (!("indexedDB" in window) || !indexedDbBackup) return;
+
+  const db = await openIndexedDb(BACKUP_INDEXEDDB_CONFIG.name, BACKUP_INDEXEDDB_CONFIG.version);
+  await Promise.all(BACKUP_INDEXEDDB_CONFIG.stores.map((storeName) => new Promise((resolve, reject) => {
+    if (!db.objectStoreNames.contains(storeName)) {
+      resolve();
+      return;
+    }
+
+    const tx = db.transaction(storeName, "readwrite");
+    const store = tx.objectStore(storeName);
+    const records = Array.isArray(indexedDbBackup[storeName]) ? indexedDbBackup[storeName] : [];
+    const clearRequest = store.clear();
+    clearRequest.onerror = () => reject(clearRequest.error || new Error(`IndexedDB clear failed for ${storeName}`));
+    clearRequest.onsuccess = () => {
+      records.forEach((record) => store.put(record));
+    };
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error || new Error(`IndexedDB write failed for ${storeName}`));
+    tx.onabort = () => reject(tx.error || new Error(`IndexedDB write aborted for ${storeName}`));
+  })));
+  db.close();
+}
+
+async function restoreFamilyBackup(file) {
+  setBackupStatus("backupStatusRestoring");
+  const raw = await file.text();
+  const payload = JSON.parse(raw);
+  if (payload?.ecosystem !== "aapka-sathi-family" || payload?.version !== BACKUP_SCHEMA_VERSION) {
+    throw new Error("invalid-backup");
+  }
+
+  Object.entries(payload.localStorage || {}).forEach(([key, value]) => {
+    if (!shouldBackupLocalStorageKey(key)) return;
+    localStorage.setItem(key, value);
+  });
+  await restoreIndexedDbBackup(payload.indexedDb);
+  applyTheme(getThemePreference(), false);
+  currentLang = localStorage.getItem(STORAGE.lang) || currentLang;
+  applyLanguage();
+  updateBackupSummary();
+  renderInstallCenter();
+  await renderApps();
+  setBackupStatus("backupStatusRestored");
+}
+
 async function renderApps() {
   const container = document.getElementById("appGrid");
   if (!container) return;
@@ -330,11 +605,8 @@ async function renderApps() {
     if (!res.ok) throw new Error(`Registry fetch failed: ${res.status}`);
     const data = await res.json();
     familyRegistry = data.apps;
-
-    document.getElementById("liveCount").textContent = String(data.apps.filter((app) => app.status === "LIVE").length);
-    document.getElementById("familyCount").textContent = String(data.apps.length);
-    document.getElementById("pwaCount").textContent = String(data.apps.filter((app) => app.pwa).length);
-    document.getElementById("reminderCount").textContent = String(data.apps.filter((app) => app.notification).length);
+    updateFamilySnapshot(data.apps);
+    updateBackupSummary();
 
     container.innerHTML = data.apps.map((app) => `
       <article class="app-card">
@@ -444,6 +716,8 @@ async function handleSingleAppInstall(app) {
 function renderInstallCenter() {
   const list = document.getElementById("installCenterList");
   if (!list) return;
+  updateFamilySnapshot();
+  updateBackupSummary();
   if (!familyRegistry.length) {
     list.innerHTML = "";
     return;
@@ -494,6 +768,49 @@ function initInstallCenter() {
   });
 }
 
+function openBackupCenter() {
+  updateBackupSummary();
+  setBackupStatus("backupStatusIdle");
+  document.getElementById("backupModal")?.classList.add("open");
+}
+
+function closeBackupCenter() {
+  document.getElementById("backupModal")?.classList.remove("open");
+}
+
+function initBackupCenter() {
+  document.getElementById("openBackupButton")?.addEventListener("click", openBackupCenter);
+  document.getElementById("heroBackupButton")?.addEventListener("click", openBackupCenter);
+  document.getElementById("backupCloseButton")?.addEventListener("click", closeBackupCenter);
+  document.getElementById("backupImportButton")?.addEventListener("click", () => {
+    document.getElementById("backupFileInput")?.click();
+  });
+  document.getElementById("backupExportButton")?.addEventListener("click", async () => {
+    try {
+      await exportFamilyBackup();
+    } catch (error) {
+      console.error("Backup export failed", error);
+      setBackupStatus("backupStatusError");
+    }
+  });
+  document.getElementById("backupFileInput")?.addEventListener("change", async (event) => {
+    const input = event.currentTarget;
+    const file = input?.files?.[0];
+    if (!file) return;
+    try {
+      await restoreFamilyBackup(file);
+    } catch (error) {
+      console.error("Backup restore failed", error);
+      setBackupStatus(error?.message === "invalid-backup" ? "backupStatusInvalid" : "backupStatusError");
+    } finally {
+      input.value = "";
+    }
+  });
+  document.getElementById("backupModal")?.addEventListener("click", (event) => {
+    if (event.target?.id === "backupModal") closeBackupCenter();
+  });
+}
+
 function openDrawer() {
   document.getElementById("drawer")?.classList.add("drawer-open");
   document.getElementById("drawer")?.setAttribute("aria-hidden", "false");
@@ -516,10 +833,42 @@ function initPwa() {
   if (isInstalled) markInstalled("aapka-sathi");
 
   if ("serviceWorker" in navigator) {
+    let refreshing = false;
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register(`${HUB_BASE}/sw.js`).catch(() => {});
+      if (window.__sathiSwManaged) return;
+      window.__sathiSwManaged = true;
+
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+
+      navigator.serviceWorker.register(`${HUB_BASE}/sw.js`, { updateViaCache: "none" }).then((registration) => {
+        registration.addEventListener("updatefound", () => {
+          const worker = registration.installing;
+          if (!worker) return;
+          worker.addEventListener("statechange", () => {
+            if (worker.state === "installed" && navigator.serviceWorker.controller) {
+              worker.postMessage({ type: "SKIP_WAITING" });
+            }
+          });
+        });
+        registration.update().catch(() => {});
+
+        const refreshInstalledShell = () => registration.update().catch(() => {});
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") refreshInstalledShell();
+        });
+        window.addEventListener("focus", refreshInstalledShell);
+      }).catch(() => {});
     });
   }
+
+  window.addEventListener("storage", (event) => {
+    if (!event.key?.startsWith(STORAGE.installMarkerPrefix)) return;
+    renderInstallCenter();
+  });
 
   window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
@@ -621,9 +970,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   initLanguage();
   initDrawer();
   initInstallCenter();
+  initBackupCenter();
   initPwa();
   initNotifications();
   initFeedback();
   await initFamilyAuth();
   await renderApps();
+  updateBackupSummary();
 });
