@@ -1,5 +1,22 @@
 const HUB_BASE = window.location.pathname.startsWith("/Aapka-Sathi") ? "/Aapka-Sathi" : "";
-const FAMILY_APPS_URL = new URL(`${HUB_BASE}/apps/apps.json`, window.location.origin).toString();
+const FAMILY_APPS_VERSION = "2026-03-19-dastavez-fix";
+const FAMILY_APPS_URL = new URL(`${HUB_BASE}/apps/apps.json?v=${FAMILY_APPS_VERSION}`, window.location.origin).toString();
+const REQUIRED_FAMILY_APPS = [
+  {
+    id: "dastavez-sathi",
+    name: "Dastavez Sathi",
+    emoji: "📄",
+    tagline: "Scan papers into clean PDFs with OCR and auto crop.",
+    description: "Mobile-first document scanner with camera capture, auto edge detection, perspective crop, OCR text extraction, multi-page PDF export, and local history.",
+    url: "https://snakeeye-sudo.github.io/Dastavez-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: false,
+    notification: true,
+    feedback: true
+  }
+];
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyC6Cpg83N8fBuvY7YOSwTWsfM9DUsaVc3E",
   authDomain: "pariksha-sathi.firebaseapp.com",
@@ -595,6 +612,16 @@ function getRecommendedApps(apps) {
   }).slice(0, 3);
 }
 
+function mergeRequiredFamilyApps(apps) {
+  const byId = new Map((apps || []).map((app) => [app.id, app]));
+  REQUIRED_FAMILY_APPS.forEach((app) => {
+    if (!byId.has(app.id)) {
+      byId.set(app.id, app);
+    }
+  });
+  return [...byId.values()];
+}
+
 function openIndexedDb(name, version) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(name, version);
@@ -936,9 +963,9 @@ async function renderApps() {
     const res = await fetch(FAMILY_APPS_URL, { cache: "no-store" });
     if (!res.ok) throw new Error(`Registry fetch failed: ${res.status}`);
     const data = await res.json();
-    familyRegistry = data.apps;
+    familyRegistry = mergeRequiredFamilyApps(data.apps);
     const filteredApps = getFilteredApps();
-    updateFamilySnapshot(data.apps);
+    updateFamilySnapshot(familyRegistry);
     updateBackupSummary();
 
     renderCategoryFilters();
