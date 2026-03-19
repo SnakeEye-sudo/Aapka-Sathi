@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aapka-Sathi | Family Hub</title>
+  <meta name="description" content="Aapka-Sathi focused everyday apps ka family hub hai jahan se study, jobs, news, finance aur space apps ek jagah milte hain.">
+  <link rel="icon" href="/Aapka-Sathi/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/Aapka-Sathi/manifest.json">
+  <meta name="theme-color" content="#f97316">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" id="appStylesheet" href="/Aapka-Sathi/styles.css?v=2026-03-19-anti-cache-v1">
+</head>
+<body data-theme="light">
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="ambient ambient-three"></div>
+
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-card">
+      <div class="drawer-head">
+        <div>
+          <p class="eyebrow" data-i18n="menuLabel">Family controls</p>
+          <h2 data-i18n="menuTitle">Aapka-Sathi menu</h2>
+        </div>
+        <button class="icon-btn" id="closeDrawerBtn" type="button" aria-label="Close menu">×</button>
+      </div>
+
+      <div class="drawer-grid">
+        <section class="menu-panel">
+          <p class="eyebrow" data-i18n="languageLabel">Language</p>
+          <h3 data-i18n="languageTitle">Hindi aur English</h3>
+          <div class="toggle-row">
+            <button class="mini-toggle" id="langHiBtn" type="button">हिन्दी</button>
+            <button class="mini-toggle" id="langEnBtn" type="button">English</button>
+          </div>
+        </section>
+
+        <section class="menu-panel">
+          <p class="eyebrow" data-i18n="themeLabel">Theme</p>
+          <h3 data-i18n="themeTitle">Alive family mood</h3>
+          <button class="menu-btn" id="themeToggle" type="button" data-i18n="themeAction">Theme badlo</button>
+        </section>
+
+        <section class="menu-panel">
+          <p class="eyebrow" data-i18n="installLabel">Install</p>
+          <h3 data-i18n="installTitle">Hub ko phone par rakho</h3>
+          <div class="menu-action-stack">
+            <button class="menu-btn hidden" id="installButton" type="button" data-i18n="installAction">Install app</button>
+            <button class="menu-btn" id="installAllButton" type="button" data-i18n="installAllAction">Install all</button>
+          </div>
+        </section>
+
+        <section class="menu-panel">
+          <p class="eyebrow" data-i18n="backupLabel">Backup</p>
+          <h3 data-i18n="backupTitle">Family data save aur restore</h3>
+          <p class="muted" id="backupSummary" data-i18n="backupSummary">Poore ecosystem ka local data yahan se ek file me save kiya ja sakta hai.</p>
+          <div class="menu-action-stack">
+            <button class="menu-btn" id="openBackupButton" type="button" data-i18n="backupAction">Backup</button>
+          </div>
+        </section>
+
+        <section class="menu-panel">
+          <p class="eyebrow" data-i18n="sharedLoginLabel">Family login</p>
+          <h3 data-i18n="sharedLoginTitle">Ek hi ID, poori family</h3>
+          <div class="login-card-mini">
+            <strong id="familyAuthName" data-i18n="authLoading">Login status load ho raha hai...</strong>
+            <span id="familyAuthEmail" class="muted" data-i18n="sharedLoginHint">Same Google login family apps me share hota hai.</span>
+          </div>
+          <div class="menu-action-stack">
+            <button class="menu-btn" id="familyAuthButton" type="button" data-i18n="authSignIn">Login with Google</button>
+          </div>
+        </section>
+
+        <section class="menu-panel">
+          <p class="eyebrow" data-i18n="pagesLabel">Pages</p>
+          <h3 data-i18n="pagesTitle">Info aur family links</h3>
+          <div class="menu-links">
+            <a href="/Aapka-Sathi/about.html" data-i18n="pageAbout">About</a>
+            <a href="/Aapka-Sathi/resources.html" data-i18n="pageResources">Resources</a>
+            <a href="/Aapka-Sathi/contact.html" data-i18n="pageContact">Contact</a>
+            <a href="/Aapka-Sathi/privacy-policy.html" data-i18n="pagePrivacy">Privacy</a>
+            <a href="/Aapka-Sathi/terms.html" data-i18n="pageTerms">Terms</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </aside>
+
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="/Aapka-Sathi/">
+          <img src="/Aapka-Sathi/logo.svg" alt="Aapka-Sathi logo">
+          <span>
+            <span class="brand-title">Aapka-Sathi</span>
+            <span class="brand-sub" data-i18n="brandSub">Focused app family</span>
+          </span>
+        </a>
+        <button class="hamburger-btn" id="openDrawerBtn" type="button" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-panel">
+          <div class="hero-copy">
+            <span class="eyebrow" data-i18n="heroEyebrow">One family, many useful apps</span>
+            <h1 data-i18n="heroTitle">Har kaam ke liye ek focused Sathi.</h1>
+            <p data-i18n="heroText">
+              Padhai, jobs, current affairs, hisaab aur space jaise daily kaam ke liye alag-alag apps, ek clean family hub ke andar. Jo kaam chahiye, wahi app kholo.
+            </p>
+            <div class="hero-actions">
+              <a class="solid-btn" href="#apps" data-i18n="heroCta">Apps dekho</a>
+              <button class="ghost-btn" id="heroInstallButton" type="button" data-i18n="heroInstall">Install hub</button>
+              <button class="ghost-btn" id="heroBackupButton" type="button" data-i18n="backupAction">Backup</button>
+            </div>
+          </div>
+
+          <aside class="hero-side">
+            <p class="eyebrow" data-i18n="snapshotLabel">Family snapshot</p>
+            <div class="hero-stats">
+              <article class="stat-card"><strong id="liveCount">0</strong><span data-i18n="liveApps">Live apps</span></article>
+              <article class="stat-card"><strong id="familyCount">0</strong><span data-i18n="totalApps">Total apps</span></article>
+              <article class="stat-card"><strong id="pwaCount">0</strong><span data-i18n="installedApps">Installed apps</span></article>
+              <article class="stat-card"><strong id="reminderCount">0</strong><span data-i18n="notInstalledApps">Not installed</span></article>
+            </div>
+            <p class="muted" data-i18n="snapshotText">Family standard ab ye bhi kehta hai ki sabhi naye apps me Hindi/English toggle aur top-right hamburger menu hoga.</p>
+            <div class="hero-login-card">
+              <div>
+                <p class="eyebrow" data-i18n="sharedLoginLabel">Family login</p>
+                <strong id="heroAuthName" data-i18n="authLoading">Login status load ho raha hai...</strong>
+                <p id="heroAuthEmail" class="muted" data-i18n="sharedLoginHint">Same Google login family apps me share hota hai.</p>
+              </div>
+              <button class="ghost-btn" id="heroAuthButton" type="button" data-i18n="authSignIn">Login with Google</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container story-grid">
+          <article class="story-card">
+            <p class="eyebrow" data-i18n="storyLabelOne">Simple</p>
+            <h2 data-i18n="storyTitleOne">User ko sirf useful cheez dikhe</h2>
+            <p data-i18n="storyTextOne">Developer details ya confusing setup info family home par nahi aayega. Bas apps kya kaam karte hain aur kisliye kholne chahiye, wahi dikhega.</p>
+          </article>
+          <article class="story-card highlight-card">
+            <p class="eyebrow" data-i18n="storyLabelTwo">Beautiful</p>
+            <h2 data-i18n="storyTitleTwo">Compact cards, clear hierarchy</h2>
+            <p data-i18n="storyTextTwo">Tiles ko lamba khinchne ke bajay ab unhe tighter, cleaner aur zyada premium family-hub feel me rakha gaya hai.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container intelligence-grid">
+          <article class="story-card dashboard-card">
+            <p class="eyebrow" data-i18n="commandLabel">Smart deck</p>
+            <h2 data-i18n="commandTitle">Family command center</h2>
+            <p class="muted" data-i18n="commandText">Install health, backup confidence, aur ecosystem progress ko ek compact view me dekho.</p>
+            <div id="familyHighlights" class="signal-list"></div>
+          </article>
+          <article class="story-card dashboard-card">
+            <p class="eyebrow" data-i18n="recentLabel">Continue</p>
+            <h2 data-i18n="recentTitle">Recently used apps</h2>
+            <p class="muted" data-i18n="recentText">Jin apps par family ne recently kaam kiya hai, unhe yahin se dobara kholo.</p>
+            <div id="recentAppsList" class="recent-app-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="apps">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow" data-i18n="appsLabel">Current family</p>
+              <h2 data-i18n="appsTitle">Aaj ke live Sathi apps</h2>
+            </div>
+            <p class="muted" data-i18n="appsText">Har card me app ka kaam seedhe user point of view se dikh raha hai.</p>
+          </div>
+          <div class="app-controls">
+            <label class="search-shell">
+              <span data-i18n="searchLabel">Search apps</span>
+              <input id="appSearchInput" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Kis app ki zarurat hai?">
+            </label>
+            <div id="categoryFilters" class="category-filters"></div>
+          </div>
+          <div class="recommend-shell">
+            <div class="section-head compact-head">
+              <div>
+                <p class="eyebrow" data-i18n="recommendedLabel">Recommended</p>
+                <h2 data-i18n="recommendedTitle">Next best apps</h2>
+              </div>
+              <p class="muted" data-i18n="recommendedText">Recent use, install status, aur family mix ke hisaab se yeh cards pehle dikh rahe hain.</p>
+            </div>
+            <div id="recommendedApps" class="recommend-grid"></div>
+          </div>
+          <div id="appGrid" class="app-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <strong>Aapka-Sathi</strong>
+          <p class="muted" data-i18n="footerText">Focused everyday apps ka ek growing family.</p>
+        </div>
+        <div class="footer-credit">
+          <span class="footer-credit-label">Crafted and developed by</span>
+          <strong>Er. Sangam Krishna</strong>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <div class="feedback-modal" id="installModal">
+    <div class="feedback-card">
+      <h2 data-i18n="installModalTitle">Install Aapka-Sathi</h2>
+      <p class="muted" data-i18n="installModalText">Hub ko app ki tarah phone par rakho, taaki poori family ek tap me mil jaye.</p>
+      <div class="field-row">
+        <button class="solid-btn" id="installNowButton" type="button" data-i18n="installNow">Install now</button>
+        <button class="ghost-btn" id="installLaterButton" type="button" data-i18n="installLater">Not now</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="feedback-modal" id="installCenterModal">
+    <div class="feedback-card install-center-card">
+      <h2 data-i18n="installCenterTitle">Install All Family Apps</h2>
+      <p class="muted" data-i18n="installCenterText">Browser har app ka install alag confirm karta hai. Yahan se poori family ke liye guided install flow start hoga.</p>
+      <div class="field-row">
+        <button class="solid-btn" id="startFamilyInstall" type="button" data-i18n="installCenterStart">Start install flow</button>
+        <button class="ghost-btn" id="closeInstallCenter" type="button" data-i18n="feedbackClose">Close</button>
+      </div>
+      <p id="installCenterStatus" class="muted install-note" data-i18n="installGuideNote">Jo app already installed hai woh open state me dikhega.</p>
+      <div id="installCenterList" class="install-center-list"></div>
+    </div>
+  </div>
+
+  <div class="feedback-modal" id="notifModal">
+    <div class="feedback-card">
+      <h2 data-i18n="notifTitle">Daily reminder</h2>
+      <p class="muted" data-i18n="notifText">Install hone ke baad roz ek baar yaad dilaya ja sakta hai ki apna useful Sathi app open kar lo.</p>
+      <div class="field-row">
+        <button class="solid-btn" id="notifAllow" type="button" data-i18n="notifAllowText">Allow reminder</button>
+        <button class="ghost-btn" id="notifSkip" type="button" data-i18n="notifSkipText">Skip</button>
+      </div>
+      <p id="notifStatus" class="muted"></p>
+    </div>
+  </div>
+
+  <button class="feedback-fab" id="feedbackFab" aria-label="Open feedback">✦</button>
+  <div class="feedback-modal" id="backupModal">
+    <div class="feedback-card install-center-card">
+      <h2 data-i18n="backupModalTitle">Family Backup</h2>
+      <p class="muted" data-i18n="backupModalText">Ek JSON backup file me poore ecosystem ka local data save karo aur isi hub se restore bhi karo.</p>
+      <div class="backup-stat-grid">
+        <article class="stat-card">
+          <strong id="backupAppCount">0</strong>
+          <span data-i18n="backupAppsTracked">Apps tracked</span>
+        </article>
+        <article class="stat-card">
+          <strong id="backupKeyCount">0</strong>
+          <span data-i18n="backupItemsSaved">Saved items</span>
+        </article>
+      </div>
+      <div class="field-row">
+        <button class="solid-btn" id="backupExportButton" type="button" data-i18n="backupCreate">Create backup</button>
+        <button class="ghost-btn" id="backupImportButton" type="button" data-i18n="backupRestore">Restore backup</button>
+        <button class="ghost-btn" id="backupCloseButton" type="button" data-i18n="feedbackClose">Close</button>
+      </div>
+      <input id="backupFileInput" class="hidden" type="file" accept=".json,application/json">
+      <p id="backupStatus" class="muted install-note" data-i18n="backupStatusIdle">Backup file yahan se share ya download ki ja sakti hai.</p>
+    </div>
+  </div>
+
+  <div class="feedback-modal" id="feedbackModal">
+    <div class="feedback-card">
+      <h2 data-i18n="feedbackTitle">Family feedback</h2>
+      <p class="muted" data-i18n="feedbackText">Bug, UI issue ya new app idea yahin se bhejo.</p>
+      <div class="field-block">
+        <label for="feedbackCategory" data-i18n="feedbackCategoryLabel">Category</label>
+        <input id="feedbackCategory" type="text" value="Family feedback">
+      </div>
+      <div class="field-block">
+        <label for="feedbackMessage" data-i18n="feedbackMessageLabel">Message</label>
+        <textarea id="feedbackMessage" data-i18n-placeholder="feedbackPlaceholder" placeholder="What should improve in the Sathi family?"></textarea>
+      </div>
+      <div class="field-row">
+        <button class="solid-btn" id="feedbackSend" type="button" data-i18n="feedbackSend">Send feedback</button>
+        <button class="ghost-btn" id="feedbackClose" type="button" data-i18n="feedbackClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.__AapkaSathiFallbackBuild = "2026-03-19-anti-cache-v1";
+    (() => {
+      const BASE = "/Aapka-Sathi";
+      const fallbackBuild = window.__AapkaSathiFallbackBuild;
+      const versionUrl = `${BASE}/version.json?ts=${Date.now()}`;
+      const stylesheet = document.getElementById("appStylesheet");
+
+      function appendScript(src, type = "text/javascript") {
+        const script = document.createElement("script");
+        if (type === "module") {
+          script.type = "module";
+        } else {
+          script.defer = true;
+        }
+        script.src = src;
+        document.body.appendChild(script);
+      }
+
+      function loadRuntime(buildVersion) {
+        const version = buildVersion || fallbackBuild;
+        if (stylesheet) {
+          stylesheet.href = `${BASE}/styles.css?v=${encodeURIComponent(version)}`;
+        }
+        appendScript(`${BASE}/app.js?v=${encodeURIComponent(version)}`, "module");
+        appendScript(`${BASE}/notification-prompt.js?v=${encodeURIComponent(version)}`);
+      }
+
+      fetch(versionUrl, { cache: "no-store" })
+        .then((response) => response.ok ? response.json() : null)
+        .then((payload) => loadRuntime(payload?.buildVersion))
+        .catch(() => loadRuntime(fallbackBuild));
+    })();
+  </script>
+</body>
+</html>
