@@ -1447,7 +1447,12 @@ function initFeedback() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+let appStarted = false;
+
+async function startApp() {
+  if (appStarted) return;
+  appStarted = true;
+
   window.__AapkaSathiBuild = BUILD_VERSION;
   ensureHubShell();
   initTheme();
@@ -1459,7 +1464,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   initPwa();
   initNotifications();
   initFeedback();
-  await initFamilyAuth();
+  syncAuthUI(null);
+  const authPromise = initFamilyAuth();
   await renderApps();
   updateBackupSummary();
-});
+  await authPromise;
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", startApp, { once: true });
+} else {
+  startApp();
+}
