@@ -113,6 +113,20 @@
       "sharedLogin": true,
       "notification": true,
       "feedback": true
+    },
+    {
+      "id": "sanket-sathi",
+      "name": "Sanket Sathi",
+      "emoji": "📡",
+      "tagline": "Hindi-English Morse translator with fast local conversion.",
+      "description": "Offline-first Morse translator for text-to-code and code-to-text conversion, with lightweight Hindi transliteration support and family-ready PWA hooks.",
+      "url": "https://snakeeye-sudo.github.io/Sanket-Sathi/",
+      "status": "LIVE",
+      "pwa": true,
+      "theme": true,
+      "sharedLogin": false,
+      "notification": false,
+      "feedback": true
     }
   ]
 }
