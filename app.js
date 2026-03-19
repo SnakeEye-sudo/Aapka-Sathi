@@ -4,6 +4,132 @@ const FAMILY_APPS_VERSION = "2026-03-19-dastavez-fix";
 const FAMILY_APPS_URL = new URL(`${HUB_BASE}/apps/apps.json?v=${FAMILY_APPS_VERSION}`, window.location.origin).toString();
 const REQUIRED_FAMILY_APPS = [
   {
+    id: "pariksha-sathi",
+    name: "Pariksha Sathi",
+    emoji: "📚",
+    tagline: "Plan your preparation, day by day.",
+    description: "Study planner for competitive exams with exam registry, syllabus-aware planning, PDF export, checklist, streaks, and cloud sync.",
+    url: "https://snakeeye-sudo.github.io/pariksha-sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: true,
+    notification: true,
+    feedback: true
+  },
+  {
+    id: "rozgar-sathi",
+    name: "Rozgar Sathi",
+    emoji: "💼",
+    tagline: "Government jobs in one place.",
+    description: "Sarkari jobs portal with vacancy listing, resume builder, application tracker, shared Google login, and PWA install support.",
+    url: "https://snakeeye-sudo.github.io/rozgar-sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: true,
+    notification: false,
+    feedback: false
+  },
+  {
+    id: "samachar-sathi",
+    name: "Samachar Sathi",
+    emoji: "📰",
+    tagline: "Daily current affairs intelligence.",
+    description: "Current affairs and daily analysis app with local vault storage, archive flow, admin import, shared auth hooks, and PWA support.",
+    url: "https://snakeeye-sudo.github.io/Samachar-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: true,
+    notification: true,
+    feedback: false
+  },
+  {
+    id: "hisaab-sathi",
+    name: "Hisaab Sathi",
+    emoji: "💰",
+    tagline: "Daily finance and udhar ledger in one place.",
+    description: "Expense, income, udhar given, udhar returned, Gmail backup fallback, reminder support, and mobile-first ledger flow.",
+    url: "https://snakeeye-sudo.github.io/Hisaab-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: true,
+    notification: true,
+    feedback: true
+  },
+  {
+    id: "antariksh-sathi",
+    name: "Antariksh Sathi",
+    emoji: "🌌",
+    tagline: "Sky events, ISRO watch, and stargazing in one orbit.",
+    description: "Offline-first space companion with meteor showers, eclipse markers, ISRO mission watch, India stargazing spots by state, agency directory, and a student curiosity lab.",
+    url: "https://snakeeye-sudo.github.io/Antariksh-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: true,
+    notification: true,
+    feedback: true
+  },
+  {
+    id: "ganit-sathi",
+    name: "Ganit Sathi",
+    emoji: "🧮",
+    tagline: "Calculator, converters, and age utility in one premium studio.",
+    description: "TypeScript-first utility app with normal and scientific calculator, daily currency sync, multi-category unit conversion, age calculator, shared family login, and cloud-ready preferences.",
+    url: "https://snakeeye-sudo.github.io/Ganit-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: true,
+    notification: true,
+    feedback: true
+  },
+  {
+    id: "jal-sathi",
+    name: "Jal Sathi",
+    emoji: "💧",
+    tagline: "Hydration reminders and water rhythm in one calm dashboard.",
+    description: "Hydration companion with official baseline goal references, wake-to-sleep reminder plan, quick logging, streak tracking, and shared family sync hooks.",
+    url: "https://snakeeye-sudo.github.io/Jal-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: true,
+    notification: true,
+    feedback: true
+  },
+  {
+    id: "mann-sathi",
+    name: "Mann Sathi",
+    emoji: "📝",
+    tagline: "Journal diary, mood tracking, and warm daily messages.",
+    description: "Local-first journal app with mood scoring, non-repeating morning and night message stock, supportive diary flow, and shared family sync hooks.",
+    url: "https://snakeeye-sudo.github.io/Mann-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: true,
+    notification: true,
+    feedback: true
+  },
+  {
+    id: "sanket-sathi",
+    name: "Sanket Sathi",
+    emoji: "📡",
+    tagline: "Hindi-English Morse translator with fast local conversion.",
+    description: "Offline-first Morse translator for text-to-code and code-to-text conversion, with lightweight Hindi transliteration support and family-ready PWA hooks.",
+    url: "https://snakeeye-sudo.github.io/Sanket-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: false,
+    notification: false,
+    feedback: true
+  },
+  {
     id: "dastavez-sathi",
     name: "Dastavez Sathi",
     emoji: "📄",
@@ -15,6 +141,104 @@ const REQUIRED_FAMILY_APPS = [
     theme: true,
     sharedLogin: false,
     notification: true,
+    feedback: true
+  },
+  {
+    id: "sikka-sathi",
+    name: "Sikka Sathi",
+    emoji: "🪙",
+    tagline: "Coin flip, dice roll, and quick chance calls in one bold board.",
+    description: "Chance utility app with animated coin toss, dice roller, streak tracking, and a clean offline-first family interface.",
+    url: "https://snakeeye-sudo.github.io/Sikka-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: false,
+    notification: false,
+    feedback: true
+  },
+  {
+    id: "khel-sathi",
+    name: "Khel Sathi",
+    emoji: "🎮",
+    tagline: "Family tic tac toe with friend and bot modes.",
+    description: "Playful mobile-first tic tac toe app with two-player mode, lightweight bot mode, and persistent round scoreboard.",
+    url: "https://snakeeye-sudo.github.io/Khel-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: false,
+    notification: false,
+    feedback: true
+  },
+  {
+    id: "dhyan-sathi",
+    name: "Dhyan Sathi",
+    emoji: "⏱️",
+    tagline: "Study watch and focus timer with calm deep-work rhythm.",
+    description: "Focus companion with 25/45/60 minute presets, break switching, task anchoring, cycle tracking, and browser notification support.",
+    url: "https://snakeeye-sudo.github.io/Dhyan-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: false,
+    notification: true,
+    feedback: true
+  },
+  {
+    id: "mausam-sathi",
+    name: "Mausam Sathi",
+    emoji: "⛅",
+    tagline: "Current weather and five-day outlook in a clean sky board.",
+    description: "Open-Meteo powered weather app with city search, current conditions, five-day forecast, and optional geolocation.",
+    url: "https://snakeeye-sudo.github.io/Mausam-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: false,
+    notification: false,
+    feedback: true
+  },
+  {
+    id: "paltu-sathi",
+    name: "Paltu Sathi",
+    emoji: "🐾",
+    tagline: "Cute virtual pet care with mood meters and playful actions.",
+    description: "Local-first virtual pet app with feed, play, rest, clean actions, pet naming, and live mood changes.",
+    url: "https://snakeeye-sudo.github.io/Paltu-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: false,
+    notification: false,
+    feedback: true
+  },
+  {
+    id: "panchang-sathi",
+    name: "Panchang Sathi",
+    emoji: "🪔",
+    tagline: "Daily Hindu calendar, timings, and festival context at a glance.",
+    description: "Panchang companion with tithi, nakshatra, yoga, paksha, masa, sunrise timings, preset cities, and geolocation support.",
+    url: "https://snakeeye-sudo.github.io/Panchang-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: false,
+    notification: false,
+    feedback: true
+  },
+  {
+    id: "ank-sathi",
+    name: "Ank Sathi",
+    emoji: "🔢",
+    tagline: "Numerology number mapping with quick personal meaning cards.",
+    description: "Reflective numerology tool with life path, birth day, attitude, and name number calculations in a polished mobile-first studio.",
+    url: "https://snakeeye-sudo.github.io/Ank-Sathi/",
+    status: "LIVE",
+    pwa: true,
+    theme: true,
+    sharedLogin: false,
+    notification: false,
     feedback: true
   }
 ];
@@ -1055,6 +1279,19 @@ async function renderApps() {
   const container = document.getElementById("appGrid");
   if (!container) return;
 
+  const fallbackApps = mergeRequiredFamilyApps([]);
+  if (!familyRegistry.length) {
+    familyRegistry = fallbackApps;
+    updateFamilySnapshot(familyRegistry);
+    updateBackupSummary();
+    renderCategoryFilters();
+    renderFamilyHighlights();
+    renderRecentApps();
+    container.innerHTML = familyRegistry.map((app) => buildAppCard(app)).join("");
+    bindAppActionButtons(container);
+    renderInstallCenter();
+  }
+
   try {
     const res = await fetch(FAMILY_APPS_URL, { cache: "no-store" });
     if (!res.ok) throw new Error(`Registry fetch failed: ${res.status}`);
@@ -1082,7 +1319,15 @@ async function renderApps() {
     bindAppActionButtons(container);
     renderInstallCenter();
   } catch (error) {
-    container.innerHTML = `<article class="app-card"><h3>Apps could not load</h3><p>${currentLang === "hi" ? "Thodi der baad refresh karke dubara try karo." : "Please refresh and try again in a moment."}</p></article>`;
+    familyRegistry = fallbackApps;
+    updateFamilySnapshot(familyRegistry);
+    updateBackupSummary();
+    renderCategoryFilters();
+    renderFamilyHighlights();
+    renderRecentApps();
+    container.innerHTML = familyRegistry.map((app) => buildAppCard(app)).join("");
+    bindAppActionButtons(container);
+    renderInstallCenter();
     console.error(error);
   }
 }
