@@ -85,6 +85,34 @@
       "sharedLogin": true,
       "notification": true,
       "feedback": true
+    },
+    {
+      "id": "jal-sathi",
+      "name": "Jal Sathi",
+      "emoji": "💧",
+      "tagline": "Hydration reminders and water rhythm in one calm dashboard.",
+      "description": "Hydration companion with official baseline goal references, wake-to-sleep reminder plan, quick logging, streak tracking, and shared family sync hooks.",
+      "url": "https://snakeeye-sudo.github.io/Jal-Sathi/",
+      "status": "LIVE",
+      "pwa": true,
+      "theme": true,
+      "sharedLogin": true,
+      "notification": true,
+      "feedback": true
+    },
+    {
+      "id": "mann-sathi",
+      "name": "Mann Sathi",
+      "emoji": "📔",
+      "tagline": "Journal diary, mood tracking, and warm daily messages.",
+      "description": "Local-first journal app with mood scoring, non-repeating morning and night message stock, supportive diary flow, and shared family sync hooks.",
+      "url": "https://snakeeye-sudo.github.io/Mann-Sathi/",
+      "status": "LIVE",
+      "pwa": true,
+      "theme": true,
+      "sharedLogin": true,
+      "notification": true,
+      "feedback": true
     }
   ]
 }
