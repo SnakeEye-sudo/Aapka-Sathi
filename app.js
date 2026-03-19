@@ -107,7 +107,8 @@ const COPY = {
       "rozgar-sathi": "Jobs aur career tracking ko seedha rakho.",
       "samachar-sathi": "Current affairs ko short aur useful form me dekho.",
       "hisaab-sathi": "Daily finance aur udhar ko clear rakho.",
-      "antariksh-sathi": "Aaj ka sky, ISRO watch aur space learning dekho."
+      "antariksh-sathi": "Aaj ka sky, ISRO watch aur space learning dekho.",
+      "dastavez-sathi": "Paper ko clean PDF aur text me turant badlo."
     }
   },
   en: {
@@ -196,7 +197,8 @@ const COPY = {
       "rozgar-sathi": "Keep jobs and career tracking simple.",
       "samachar-sathi": "See current affairs in a short useful form.",
       "hisaab-sathi": "Keep daily finance and lending clear.",
-      "antariksh-sathi": "See today’s sky, ISRO watch, and space learning."
+      "antariksh-sathi": "See today’s sky, ISRO watch, and space learning.",
+      "dastavez-sathi": "Turn paper into clean PDFs and readable text fast."
     }
   }
 };

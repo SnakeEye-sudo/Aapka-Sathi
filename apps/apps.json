@@ -129,6 +129,20 @@
       "feedback": true
     },
     {
+      "id": "dastavez-sathi",
+      "name": "Dastavez Sathi",
+      "emoji": "📄",
+      "tagline": "Scan papers into clean PDFs with OCR and auto crop.",
+      "description": "Mobile-first document scanner with camera capture, auto edge detection, perspective crop, OCR text extraction, multi-page PDF export, and local history.",
+      "url": "https://snakeeye-sudo.github.io/Dastavez-Sathi/",
+      "status": "LIVE",
+      "pwa": true,
+      "theme": true,
+      "sharedLogin": false,
+      "notification": true,
+      "feedback": true
+    },
+    {
       "id": "sikka-sathi",
       "name": "Sikka Sathi",
       "emoji": "🪙",
