@@ -1,10 +1,11 @@
 const CACHE_PREFIX = "aapka-sathi";
-const CACHE = `${CACHE_PREFIX}-v2026-03-19`;
+const CACHE = `${CACHE_PREFIX}-v2026-03-19-anti-cache-v1`;
 const APP_SHELL = [
   "/Aapka-Sathi/",
   "/Aapka-Sathi/index.html",
   "/Aapka-Sathi/styles.css",
   "/Aapka-Sathi/app.js",
+  "/Aapka-Sathi/version.json",
   "/Aapka-Sathi/manifest.json",
   "/Aapka-Sathi/logo.svg",
   "/Aapka-Sathi/favicon.svg",

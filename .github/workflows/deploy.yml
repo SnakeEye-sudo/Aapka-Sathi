@@ -34,6 +34,7 @@ jobs:
             --exclude 'package-lock.json' \
             --exclude 'tsconfig.json' \
             ./ "$OUT_DIR"/
+          printf '{\n  "buildVersion": "%s",\n  "builtAt": "%s"\n}\n' "${GITHUB_SHA}" "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" > "$OUT_DIR/version.json"
           cd "$OUT_DIR"
           touch .nojekyll
           git init

@@ -1,4 +1,5 @@
 const HUB_BASE = window.location.pathname.startsWith("/Aapka-Sathi") ? "/Aapka-Sathi" : "";
+const BUILD_VERSION = "2026-03-19-anti-cache-v1";
 const FAMILY_APPS_VERSION = "2026-03-19-dastavez-fix";
 const FAMILY_APPS_URL = new URL(`${HUB_BASE}/apps/apps.json?v=${FAMILY_APPS_VERSION}`, window.location.origin).toString();
 const REQUIRED_FAMILY_APPS = [
@@ -403,6 +404,110 @@ const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 function t(key) {
   return COPY[currentLang][key];
+}
+
+function ensureBackupShell() {
+  const drawerGrid = document.querySelector(".drawer-grid");
+  if (drawerGrid && !document.getElementById("openBackupButton")) {
+    drawerGrid.insertAdjacentHTML("beforeend", `
+      <section class="menu-panel">
+        <p class="eyebrow" data-i18n="backupLabel">Backup</p>
+        <h3 data-i18n="backupTitle">Family data save aur restore</h3>
+        <p class="muted" id="backupSummary" data-i18n="backupSummary">Poore ecosystem ka local data yahan se ek file me save kiya ja sakta hai.</p>
+        <div class="menu-action-stack">
+          <button class="menu-btn" id="openBackupButton" type="button" data-i18n="backupAction">Backup</button>
+        </div>
+      </section>
+    `);
+  }
+
+  const heroActions = document.querySelector(".hero-actions");
+  if (heroActions && !document.getElementById("heroBackupButton")) {
+    heroActions.insertAdjacentHTML("beforeend", `<button class="ghost-btn" id="heroBackupButton" type="button" data-i18n="backupAction">Backup</button>`);
+  }
+
+  if (!document.getElementById("backupModal")) {
+    document.body.insertAdjacentHTML("beforeend", `
+      <div class="feedback-modal" id="backupModal">
+        <div class="feedback-card install-center-card">
+          <h2 data-i18n="backupModalTitle">Family Backup</h2>
+          <p class="muted" data-i18n="backupModalText">Ek JSON backup file me poore ecosystem ka local data save karo aur isi hub se restore bhi karo.</p>
+          <div class="backup-stat-grid">
+            <article class="stat-card">
+              <strong id="backupAppCount">0</strong>
+              <span data-i18n="backupAppsTracked">Apps tracked</span>
+            </article>
+            <article class="stat-card">
+              <strong id="backupKeyCount">0</strong>
+              <span data-i18n="backupItemsSaved">Saved items</span>
+            </article>
+          </div>
+          <div class="field-row">
+            <button class="solid-btn" id="backupExportButton" type="button" data-i18n="backupCreate">Create backup</button>
+            <button class="ghost-btn" id="backupImportButton" type="button" data-i18n="backupRestore">Restore backup</button>
+            <button class="ghost-btn" id="backupCloseButton" type="button" data-i18n="feedbackClose">Close</button>
+          </div>
+          <input id="backupFileInput" class="hidden" type="file" accept=".json,application/json">
+          <p id="backupStatus" class="muted install-note" data-i18n="backupStatusIdle">Backup file yahan se share ya download ki ja sakti hai.</p>
+        </div>
+      </div>
+    `);
+  }
+}
+
+function ensureDashboardShell() {
+  const storySection = document.querySelector(".story-grid")?.closest(".section");
+  if (storySection && !document.getElementById("familyHighlights")) {
+    storySection.insertAdjacentHTML("afterend", `
+      <section class="section">
+        <div class="container intelligence-grid">
+          <article class="story-card dashboard-card">
+            <p class="eyebrow" data-i18n="commandLabel">Smart deck</p>
+            <h2 data-i18n="commandTitle">Family command center</h2>
+            <p class="muted" data-i18n="commandText">Install health, backup confidence, aur ecosystem progress ko ek compact view me dekho.</p>
+            <div id="familyHighlights" class="signal-list"></div>
+          </article>
+          <article class="story-card dashboard-card">
+            <p class="eyebrow" data-i18n="recentLabel">Continue</p>
+            <h2 data-i18n="recentTitle">Recently used apps</h2>
+            <p class="muted" data-i18n="recentText">Jin apps par family ne recently kaam kiya hai, unhe yahin se dobara kholo.</p>
+            <div id="recentAppsList" class="recent-app-list"></div>
+          </article>
+        </div>
+      </section>
+    `);
+  }
+
+  const appsContainer = document.querySelector("#apps .container");
+  const appGrid = document.getElementById("appGrid");
+  if (!appsContainer || !appGrid) return;
+
+  if (!document.getElementById("categoryFilters")) {
+    appGrid.insertAdjacentHTML("beforebegin", `
+      <div class="app-controls">
+        <label class="search-shell">
+          <span data-i18n="searchLabel">Search apps</span>
+          <input id="appSearchInput" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Kis app ki zarurat hai?">
+        </label>
+        <div id="categoryFilters" class="category-filters"></div>
+      </div>
+      <div class="recommend-shell">
+        <div class="section-head compact-head">
+          <div>
+            <p class="eyebrow" data-i18n="recommendedLabel">Recommended</p>
+            <h2 data-i18n="recommendedTitle">Next best apps</h2>
+          </div>
+          <p class="muted" data-i18n="recommendedText">Recent use, install status, aur family mix ke hisaab se yeh cards pehle dikh rahe hain.</p>
+        </div>
+        <div id="recommendedApps" class="recommend-grid"></div>
+      </div>
+    `);
+  }
+}
+
+function ensureHubShell() {
+  ensureBackupShell();
+  ensureDashboardShell();
 }
 
 function getInstallMarker(appId) {
@@ -1343,6 +1448,8 @@ function initFeedback() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  window.__AapkaSathiBuild = BUILD_VERSION;
+  ensureHubShell();
   initTheme();
   initLanguage();
   initDrawer();

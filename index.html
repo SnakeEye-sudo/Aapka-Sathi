@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/Aapka-Sathi/styles.css">
+  <link rel="stylesheet" id="appStylesheet" href="/Aapka-Sathi/styles.css?v=2026-03-19-anti-cache-v1">
 </head>
 <body data-theme="light">
   <div class="ambient ambient-one"></div>
@@ -301,7 +301,39 @@
     </div>
   </div>
 
-  <script type="module" src="/Aapka-Sathi/app.js"></script>
-  <script defer src="notification-prompt.js"></script>
+  <script>
+    window.__AapkaSathiFallbackBuild = "2026-03-19-anti-cache-v1";
+    (() => {
+      const BASE = "/Aapka-Sathi";
+      const fallbackBuild = window.__AapkaSathiFallbackBuild;
+      const versionUrl = `${BASE}/version.json?ts=${Date.now()}`;
+      const stylesheet = document.getElementById("appStylesheet");
+
+      function appendScript(src, type = "text/javascript") {
+        const script = document.createElement("script");
+        if (type === "module") {
+          script.type = "module";
+        } else {
+          script.defer = true;
+        }
+        script.src = src;
+        document.body.appendChild(script);
+      }
+
+      function loadRuntime(buildVersion) {
+        const version = buildVersion || fallbackBuild;
+        if (stylesheet) {
+          stylesheet.href = `${BASE}/styles.css?v=${encodeURIComponent(version)}`;
+        }
+        appendScript(`${BASE}/app.js?v=${encodeURIComponent(version)}`, "module");
+        appendScript(`${BASE}/notification-prompt.js?v=${encodeURIComponent(version)}`);
+      }
+
+      fetch(versionUrl, { cache: "no-store" })
+        .then((response) => response.ok ? response.json() : null)
+        .then((payload) => loadRuntime(payload?.buildVersion))
+        .catch(() => loadRuntime(fallbackBuild));
+    })();
+  </script>
 </body>
 </html>
