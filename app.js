@@ -53,6 +53,25 @@ const BACKUP_INDEXEDDB_CONFIG = {
   version: 2,
   stores: ["analyses"]
 };
+const APP_CATEGORY_MAP = {
+  "pariksha-sathi": "study",
+  "rozgar-sathi": "career",
+  "samachar-sathi": "current",
+  "hisaab-sathi": "finance",
+  "antariksh-sathi": "learning",
+  "ganit-sathi": "utility",
+  "jal-sathi": "wellness",
+  "mann-sathi": "wellness",
+  "sanket-sathi": "utility",
+  "dastavez-sathi": "productivity",
+  "sikka-sathi": "play",
+  "khel-sathi": "play",
+  "dhyan-sathi": "wellness",
+  "mausam-sathi": "daily",
+  "paltu-sathi": "play",
+  "panchang-sathi": "daily",
+  "ank-sathi": "reflection"
+};
 
 const COPY = {
   hi: {
@@ -106,9 +125,48 @@ const COPY = {
     storyLabelTwo: "Beautiful",
     storyTitleTwo: "Compact cards, clear hierarchy",
     storyTextTwo: "Cards compact, elegant aur touch-friendly rakhe gaye hain taaki family hub premium aur easy lage.",
+    commandLabel: "Smart deck",
+    commandTitle: "Family command center",
+    commandText: "Install health, backup confidence, aur ecosystem progress ko ek compact view me dekho.",
+    recentLabel: "Continue",
+    recentTitle: "Recently used apps",
+    recentText: "Jin apps par family ne recently kaam kiya hai, unhe yahin se dobara kholo.",
+    recentEmpty: "Abhi tak koi family app recent list me nahi aaya. Kisi app ko open karoge to yahan dikhega.",
     appsLabel: "Current family",
     appsTitle: "Aaj ke live Sathi apps",
     appsText: "Jo app chahiye us par tap karo aur seedha kaam shuru karo.",
+    searchLabel: "Search apps",
+    searchPlaceholder: "Kis app ki zarurat hai?",
+    recommendedLabel: "Recommended",
+    recommendedTitle: "Next best apps",
+    recommendedText: "Recent use, install status, aur family mix ke hisaab se yeh cards pehle dikh rahe hain.",
+    noAppsMatch: "Is search ya filter me abhi koi app match nahi hua.",
+    cardInstall: "Install app",
+    cardPreview: "Open web",
+    statusNeedsInstall: "Needs install",
+    statusInstalledCard: "Installed",
+    statusSharedLogin: "Shared login",
+    statusReminderOn: "Reminder ready",
+    statusLastOpened: "Last opened",
+    statusNeverOpened: "Not opened yet",
+    commandInstalled: "Installed family apps ab clean track ho rahe hain.",
+    commandBackup: "Manual backup aur restore ecosystem level par ready hai.",
+    commandDiscover: "Search aur categories se right app jaldi mil jayega.",
+    commandLastBackupPrefix: "Last backup",
+    categories: {
+      all: "All",
+      study: "Study",
+      career: "Career",
+      current: "Current affairs",
+      finance: "Finance",
+      learning: "Learning",
+      utility: "Utility",
+      wellness: "Wellness",
+      productivity: "Productivity",
+      play: "Fun",
+      daily: "Daily life",
+      reflection: "Reflection"
+    },
     footerText: "Focused everyday apps ka ek growing family.",
     installModalTitle: "Install Aapka-Sathi",
     installModalText: "Hub ko app ki tarah phone par rakho, taaki poori family ek tap me mil jaye.",
@@ -216,9 +274,48 @@ const COPY = {
     storyLabelTwo: "Beautiful",
     storyTitleTwo: "Compact cards, clear hierarchy",
     storyTextTwo: "The cards are now compact, elegant, and touch-friendly so the family hub feels polished.",
+    commandLabel: "Smart deck",
+    commandTitle: "Family command center",
+    commandText: "See install health, backup confidence, and ecosystem progress in one compact view.",
+    recentLabel: "Continue",
+    recentTitle: "Recently used apps",
+    recentText: "Jump back into the family apps that were used most recently.",
+    recentEmpty: "No family app has been opened recently yet. Open one and it will appear here.",
     appsLabel: "Current family",
     appsTitle: "Today's live Sathi apps",
     appsText: "Tap the app you need and get straight to work.",
+    searchLabel: "Search apps",
+    searchPlaceholder: "Which app do you need?",
+    recommendedLabel: "Recommended",
+    recommendedTitle: "Next best apps",
+    recommendedText: "These cards are ranked first using recent use, install status, and family balance.",
+    noAppsMatch: "No app matches this search or filter right now.",
+    cardInstall: "Install app",
+    cardPreview: "Open web",
+    statusNeedsInstall: "Needs install",
+    statusInstalledCard: "Installed",
+    statusSharedLogin: "Shared login",
+    statusReminderOn: "Reminder ready",
+    statusLastOpened: "Last opened",
+    statusNeverOpened: "Not opened yet",
+    commandInstalled: "Installed family apps are now tracked cleanly.",
+    commandBackup: "Manual family backup and restore are ready.",
+    commandDiscover: "Search and categories help the right app surface faster.",
+    commandLastBackupPrefix: "Last backup",
+    categories: {
+      all: "All",
+      study: "Study",
+      career: "Career",
+      current: "Current affairs",
+      finance: "Finance",
+      learning: "Learning",
+      utility: "Utility",
+      wellness: "Wellness",
+      productivity: "Productivity",
+      play: "Fun",
+      daily: "Daily life",
+      reflection: "Reflection"
+    },
     footerText: "A growing family of focused everyday apps.",
     installModalTitle: "Install Aapka-Sathi",
     installModalText: "Keep the hub on your phone like an app so the whole family is one tap away.",
@@ -283,6 +380,8 @@ let currentLang = localStorage.getItem(STORAGE.lang) || "hi";
 let familyRegistry = [];
 let familyAuthApi = null;
 let authUser = null;
+let currentSearchQuery = "";
+let currentCategory = "all";
 const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 function t(key) {
@@ -395,6 +494,42 @@ function appDescription(app) {
   return map[app.id] || app.description;
 }
 
+function getLastOpenedKey(appId) {
+  return `sathi-last-opened-${appId}`;
+}
+
+function getAppCategory(app) {
+  return APP_CATEGORY_MAP[app.id] || "all";
+}
+
+function getCategoryLabel(category) {
+  return t("categories")[category] || category;
+}
+
+function getLastOpened(appId) {
+  return Number(localStorage.getItem(getLastOpenedKey(appId)) || "0");
+}
+
+function markAppOpened(appId) {
+  localStorage.setItem(getLastOpenedKey(appId), String(Date.now()));
+}
+
+function formatRelativeTime(timestamp) {
+  if (!timestamp) return t("statusNeverOpened");
+  const diff = Date.now() - timestamp;
+  if (diff < 60 * 1000) return currentLang === "hi" ? "abhi" : "just now";
+  if (diff < 60 * 60 * 1000) {
+    const minutes = Math.round(diff / (60 * 1000));
+    return currentLang === "hi" ? `${minutes} min pehle` : `${minutes} min ago`;
+  }
+  if (diff < 24 * 60 * 60 * 1000) {
+    const hours = Math.round(diff / (60 * 60 * 1000));
+    return currentLang === "hi" ? `${hours} ghante pehle` : `${hours}h ago`;
+  }
+  const days = Math.round(diff / (24 * 60 * 60 * 1000));
+  return currentLang === "hi" ? `${days} din pehle` : `${days}d ago`;
+}
+
 function getInstalledCounts(apps = familyRegistry) {
   const installed = apps.filter((app) => isAppInstalled(app.id)).length;
   return {
@@ -425,6 +560,39 @@ function collectLocalStorageBackup() {
     data[key] = localStorage.getItem(key);
   }
   return data;
+}
+
+function getFilteredApps() {
+  const search = currentSearchQuery.trim().toLowerCase();
+  return familyRegistry.filter((app) => {
+    const categoryMatch = currentCategory === "all" || getAppCategory(app) === currentCategory;
+    if (!categoryMatch) return false;
+    if (!search) return true;
+
+    const haystack = [
+      app.name,
+      app.tagline,
+      app.description,
+      appDescription(app),
+      getCategoryLabel(getAppCategory(app))
+    ].join(" ").toLowerCase();
+    return haystack.includes(search);
+  });
+}
+
+function getRecommendedApps(apps) {
+  const recent = [...apps]
+    .filter((app) => getLastOpened(app.id))
+    .sort((a, b) => getLastOpened(b.id) - getLastOpened(a.id));
+  const installed = apps.filter((app) => isAppInstalled(app.id));
+  const pending = apps.filter((app) => !isAppInstalled(app.id));
+  const ordered = [...recent, ...installed, ...pending];
+  const seen = new Set();
+  return ordered.filter((app) => {
+    if (seen.has(app.id)) return false;
+    seen.add(app.id);
+    return true;
+  }).slice(0, 3);
 }
 
 function openIndexedDb(name, version) {
@@ -495,15 +663,17 @@ function updateBackupSummary() {
   const appCountNode = document.getElementById("backupAppCount");
   const keyCountNode = document.getElementById("backupKeyCount");
   const localStorageCount = Object.keys(collectLocalStorageBackup()).length;
+  const lastBackupAt = localStorage.getItem("aapka-sathi-last-backup-at");
 
   if (appCountNode) appCountNode.textContent = String(familyRegistry.length);
   if (keyCountNode) keyCountNode.textContent = String(localStorageCount);
 
   if (summaryNode) {
     const { installed, notInstalled } = getInstalledCounts();
+    const lastBackupLabel = lastBackupAt ? ` ${t("commandLastBackupPrefix")}: ${formatRelativeTime(Number(lastBackupAt))}.` : "";
     summaryNode.textContent = currentLang === "hi"
-      ? `${installed} apps installed, ${notInstalled} baaki. Backup me family ka local data save hoga.`
-      : `${installed} apps installed, ${notInstalled} left. The backup will include the family's local data.`;
+      ? `${installed} apps installed, ${notInstalled} baaki. Backup me family ka local data save hoga.${lastBackupLabel}`
+      : `${installed} apps installed, ${notInstalled} left. The backup will include the family's local data.${lastBackupLabel}`;
   }
 }
 
@@ -524,6 +694,7 @@ function downloadBackupFile(file) {
 async function exportFamilyBackup() {
   setBackupStatus("backupStatusPreparing");
   const payload = await buildBackupPayload();
+  localStorage.setItem("aapka-sathi-last-backup-at", String(Date.now()));
   document.getElementById("backupAppCount").textContent = String(payload.appsTracked.length);
   document.getElementById("backupKeyCount").textContent = String(payload.stats.localStorageItems + payload.stats.indexedDbItems);
 
@@ -576,6 +747,13 @@ async function restoreIndexedDbBackup(indexedDbBackup) {
 
 async function restoreFamilyBackup(file) {
   setBackupStatus("backupStatusRestoring");
+  const shouldRestore = window.confirm(currentLang === "hi"
+    ? "Is backup ko restore karne par current local data overwrite ho sakta hai. Continue karein?"
+    : "Restoring this backup may overwrite current local data. Continue?");
+  if (!shouldRestore) {
+    setBackupStatus("backupStatusIdle");
+    return;
+  }
   const raw = await file.text();
   const payload = JSON.parse(raw);
   if (payload?.ecosystem !== "aapka-sathi-family" || payload?.version !== BACKUP_SCHEMA_VERSION) {
@@ -584,9 +762,10 @@ async function restoreFamilyBackup(file) {
 
   Object.entries(payload.localStorage || {}).forEach(([key, value]) => {
     if (!shouldBackupLocalStorageKey(key)) return;
-    localStorage.setItem(key, value);
-  });
+      localStorage.setItem(key, value);
+    });
   await restoreIndexedDbBackup(payload.indexedDb);
+  localStorage.setItem("aapka-sathi-last-backup-at", String(Date.now()));
   applyTheme(getThemePreference(), false);
   currentLang = localStorage.getItem(STORAGE.lang) || currentLang;
   applyLanguage();
@@ -594,6 +773,159 @@ async function restoreFamilyBackup(file) {
   renderInstallCenter();
   await renderApps();
   setBackupStatus("backupStatusRestored");
+}
+
+function renderCategoryFilters() {
+  const container = document.getElementById("categoryFilters");
+  if (!container) return;
+  if (!familyRegistry.length) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const categories = ["all", ...new Set(familyRegistry.map((app) => getAppCategory(app)))];
+  container.innerHTML = categories.map((category) => `
+    <button class="filter-chip ${currentCategory === category ? "active" : ""}" type="button" data-category-filter="${category}">
+      ${getCategoryLabel(category)}
+    </button>
+  `).join("");
+
+  container.querySelectorAll("[data-category-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      currentCategory = button.dataset.categoryFilter || "all";
+      renderApps();
+    });
+  });
+}
+
+function renderFamilyHighlights() {
+  const container = document.getElementById("familyHighlights");
+  if (!container || !familyRegistry.length) return;
+
+  const { installed, notInstalled } = getInstalledCounts();
+  const backupAt = localStorage.getItem("aapka-sathi-last-backup-at");
+  const items = [
+    { title: `${installed}/${familyRegistry.length}`, text: t("commandInstalled") },
+    { title: backupAt ? formatRelativeTime(Number(backupAt)) : (currentLang === "hi" ? "abhi tak nahi" : "not yet"), text: t("commandBackup") },
+    { title: `${notInstalled}`, text: t("commandDiscover") }
+  ];
+
+  container.innerHTML = items.map((item) => `
+    <article class="signal-item">
+      <strong>${item.title}</strong>
+      <span class="muted">${item.text}</span>
+    </article>
+  `).join("");
+}
+
+function buildAppCard(app, compact = false) {
+  const installed = isAppInstalled(app.id);
+  const lastOpened = getLastOpened(app.id);
+  const statusChips = [
+    `<span class="status-pill">${installed ? t("statusInstalledCard") : t("statusNeedsInstall")}</span>`,
+    `<span class="feature-pill">${t("statusLastOpened")}: ${lastOpened ? formatRelativeTime(lastOpened) : t("statusNeverOpened")}</span>`
+  ];
+
+  if (app.sharedLogin) statusChips.push(`<span class="feature-pill">${t("statusSharedLogin")}</span>`);
+  if (app.notification) statusChips.push(`<span class="feature-pill">${t("statusReminderOn")}</span>`);
+
+  return `
+    <article class="app-card ${compact ? "compact-card" : ""}">
+      <div class="app-top-row">
+        <div class="app-top">
+          <div class="app-icon">${app.emoji}</div>
+          <div>
+            <h3>${app.name}</h3>
+            <p class="app-tagline">${t("appMood")[app.id] || app.tagline}</p>
+          </div>
+        </div>
+        <span class="category-pill">${getCategoryLabel(getAppCategory(app))}</span>
+      </div>
+      <p>${appDescription(app)}</p>
+      <div class="app-meta">
+        <span class="feature-pill">${t("featureLang")}</span>
+        <span class="feature-pill">${t("featureInstall")}</span>
+        <span class="feature-pill">${app.notification ? t("featureReminder") : t("featureTheme")}</span>
+      </div>
+      <div class="app-status-row">${statusChips.join("")}</div>
+      <div class="app-card-actions">
+        <button class="solid-btn" type="button" data-primary-action="${app.id}">${installed ? t("appOpen") : t("cardInstall")}</button>
+        <button class="ghost-btn" type="button" data-open-app="${app.id}">${t("cardPreview")}</button>
+      </div>
+    </article>
+  `;
+}
+
+function bindAppActionButtons(scope = document) {
+  scope.querySelectorAll("[data-open-app]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const app = familyRegistry.find((entry) => entry.id === button.dataset.openApp);
+      if (!app) return;
+      markAppOpened(app.id);
+      window.open(app.url, "_blank", "noopener,noreferrer");
+      renderRecentApps();
+      renderFamilyHighlights();
+      renderRecommendedApps(getFilteredApps());
+      updateBackupSummary();
+    });
+  });
+
+  scope.querySelectorAll("[data-primary-action]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const app = familyRegistry.find((entry) => entry.id === button.dataset.primaryAction);
+      if (!app) return;
+      if (isAppInstalled(app.id)) {
+        markAppOpened(app.id);
+        window.open(app.url, "_blank", "noopener,noreferrer");
+        renderRecentApps();
+        renderFamilyHighlights();
+        renderRecommendedApps(getFilteredApps());
+        updateBackupSummary();
+        return;
+      }
+      await handleSingleAppInstall(app);
+      await renderApps();
+    });
+  });
+}
+
+function renderRecentApps() {
+  const container = document.getElementById("recentAppsList");
+  if (!container) return;
+
+  const recentApps = [...familyRegistry]
+    .filter((app) => getLastOpened(app.id))
+    .sort((a, b) => getLastOpened(b.id) - getLastOpened(a.id))
+    .slice(0, 4);
+
+  if (!recentApps.length) {
+    container.innerHTML = `<article class="recent-app-item"><div class="recent-app-copy"><strong>${t("recentTitle")}</strong><span class="muted">${t("recentEmpty")}</span></div></article>`;
+    return;
+  }
+
+  container.innerHTML = recentApps.map((app) => `
+    <article class="recent-app-item">
+      <div class="recent-app-copy">
+        <strong>${app.name}</strong>
+        <span class="muted">${app.tagline}</span>
+        <div class="recent-app-meta">
+          <span class="feature-pill">${getCategoryLabel(getAppCategory(app))}</span>
+          <span class="feature-pill">${t("statusLastOpened")}: ${formatRelativeTime(getLastOpened(app.id))}</span>
+        </div>
+      </div>
+      <button class="ghost-btn" type="button" data-open-app="${app.id}">${t("appOpen")}</button>
+    </article>
+  `).join("");
+
+  bindAppActionButtons(container);
+}
+
+function renderRecommendedApps(apps) {
+  const container = document.getElementById("recommendedApps");
+  if (!container) return;
+  const recommended = getRecommendedApps(apps);
+  container.innerHTML = recommended.map((app) => buildAppCard(app, true)).join("");
+  bindAppActionButtons(container);
 }
 
 async function renderApps() {
@@ -605,35 +937,39 @@ async function renderApps() {
     if (!res.ok) throw new Error(`Registry fetch failed: ${res.status}`);
     const data = await res.json();
     familyRegistry = data.apps;
+    const filteredApps = getFilteredApps();
     updateFamilySnapshot(data.apps);
     updateBackupSummary();
 
-    container.innerHTML = data.apps.map((app) => `
-      <article class="app-card">
-        <div class="app-top">
-          <div class="app-top">
-            <div class="app-icon">${app.emoji}</div>
-            <div>
-              <h3>${app.name}</h3>
-              <p class="app-tagline">${t("appMood")[app.id] || app.tagline}</p>
-            </div>
-          </div>
-          <span class="status-pill">${app.status}</span>
-        </div>
-        <p>${appDescription(app)}</p>
-        <div class="app-meta">
-          <span class="feature-pill">${t("featureLang")}</span>
-          <span class="feature-pill">${t("featureInstall")}</span>
-          <span class="feature-pill">${app.notification ? t("featureReminder") : t("featureTheme")}</span>
-        </div>
-        <a class="solid-btn" href="${app.url}" target="_blank" rel="noopener noreferrer">${t("appOpen")}</a>
-      </article>
-    `).join("");
+    renderCategoryFilters();
+    renderFamilyHighlights();
+    renderRecentApps();
+    renderRecommendedApps(filteredApps);
+
+    if (!filteredApps.length) {
+      container.innerHTML = `
+        <article class="app-card">
+          <h3>${t("noAppsMatch")}</h3>
+          <p>${currentLang === "hi" ? "Search ya category filter badal kar dubara dekhiye." : "Try a different search or category filter."}</p>
+        </article>
+      `;
+      return;
+    }
+
+    container.innerHTML = filteredApps.map((app) => buildAppCard(app)).join("");
+    bindAppActionButtons(container);
     renderInstallCenter();
   } catch (error) {
     container.innerHTML = `<article class="app-card"><h3>Apps could not load</h3><p>${currentLang === "hi" ? "Thodi der baad refresh karke dubara try karo." : "Please refresh and try again in a moment."}</p></article>`;
     console.error(error);
   }
+}
+
+function initDiscoveryControls() {
+  document.getElementById("appSearchInput")?.addEventListener("input", (event) => {
+    currentSearchQuery = event.currentTarget.value || "";
+    renderApps();
+  });
 }
 
 function syncAuthUI(user) {
@@ -866,8 +1202,22 @@ function initPwa() {
   }
 
   window.addEventListener("storage", (event) => {
-    if (!event.key?.startsWith(STORAGE.installMarkerPrefix)) return;
-    renderInstallCenter();
+    if (!event.key) return;
+    if (event.key.startsWith(STORAGE.installMarkerPrefix)) {
+      renderInstallCenter();
+      renderApps();
+      return;
+    }
+    if (event.key.startsWith("sathi-last-opened-")) {
+      renderRecentApps();
+      renderFamilyHighlights();
+      renderRecommendedApps(getFilteredApps());
+      return;
+    }
+    if (event.key === "aapka-sathi-last-backup-at") {
+      updateBackupSummary();
+      renderFamilyHighlights();
+    }
   });
 
   window.addEventListener("beforeinstallprompt", (event) => {
@@ -969,6 +1319,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
   initLanguage();
   initDrawer();
+  initDiscoveryControls();
   initInstallCenter();
   initBackupCenter();
   initPwa();

@@ -98,6 +98,7 @@ button, input, textarea { font: inherit; }
 .topbar-inner,
 .hero-panel,
 .story-grid,
+.intelligence-grid,
 .section-head,
 .footer-inner,
 .drawer-head,
@@ -324,9 +325,56 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   align-items: stretch;
 }
 
+.intelligence-grid {
+  align-items: stretch;
+}
+
 .story-card {
   flex: 1;
   padding: 1.25rem;
+}
+
+.dashboard-card {
+  min-height: 100%;
+}
+
+.signal-list,
+.recent-app-list {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.signal-item,
+.recent-app-item {
+  border: 1px solid var(--line);
+  border-radius: 1.15rem;
+  padding: 0.95rem 1rem;
+  background: rgba(255,255,255,0.03);
+}
+
+.signal-item strong,
+.recent-app-item strong {
+  display: block;
+  margin-bottom: 0.24rem;
+}
+
+.recent-app-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.recent-app-copy {
+  min-width: 0;
+}
+
+.recent-app-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.45rem;
 }
 
 .highlight-card {
@@ -343,6 +391,69 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
 .app-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.app-controls {
+  display: grid;
+  gap: 0.9rem;
+  margin-bottom: 1.1rem;
+}
+
+.search-shell {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.search-shell span {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.search-shell input {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid var(--line);
+  padding: 0.95rem 1rem;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.filter-chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.68rem 0.95rem;
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.filter-chip:hover,
+.filter-chip.active {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.14), rgba(20, 184, 166, 0.1));
+}
+
+.recommend-shell {
+  margin-bottom: 1.1rem;
+}
+
+.compact-head {
+  margin-bottom: 0.9rem;
+}
+
+.recommend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
 }
 
@@ -369,6 +480,13 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   align-items: center;
   justify-content: space-between;
   gap: 0.9rem;
+}
+
+.app-top-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.9rem;
+  align-items: flex-start;
 }
 
 .app-icon {
@@ -399,10 +517,47 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   background: rgba(249, 115, 22, 0.1);
 }
 
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.38rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: rgba(20, 184, 166, 0.1);
+  color: #0f766e;
+}
+
+body[data-theme="dark"] .category-pill {
+  color: #7dd3c7;
+}
+
 .app-tagline {
   margin: 0.45rem 0 0.55rem;
   color: var(--accent);
   font-weight: 700;
+}
+
+.app-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+}
+
+.app-card-actions {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: auto;
+}
+
+.app-card-actions .solid-btn,
+.app-card-actions .ghost-btn {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
 }
 
 .app-meta {
@@ -412,8 +567,6 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
 }
 
 .app-card .solid-btn {
-  width: 100%;
-  margin-top: auto;
   border-radius: 1.15rem;
   padding: 0.92rem 1rem;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
@@ -617,6 +770,7 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
 @media (max-width: 900px) {
   .hero-panel,
   .story-grid,
+  .intelligence-grid,
   .section-head,
   .footer-inner,
   .hero-login-card,
@@ -643,6 +797,13 @@ h3 { font-size: 1.05rem; letter-spacing: -0.03em; }
   .backup-stat-grid,
   .drawer-grid {
     grid-template-columns: 1fr;
+  }
+
+  .recent-app-item,
+  .app-card-actions,
+  .app-top-row {
+    grid-template-columns: 1fr;
+    display: grid;
   }
 }
 

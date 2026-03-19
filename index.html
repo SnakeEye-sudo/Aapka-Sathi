@@ -159,6 +159,23 @@
         </div>
       </section>
 
+      <section class="section">
+        <div class="container intelligence-grid">
+          <article class="story-card dashboard-card">
+            <p class="eyebrow" data-i18n="commandLabel">Smart deck</p>
+            <h2 data-i18n="commandTitle">Family command center</h2>
+            <p class="muted" data-i18n="commandText">Install health, backup confidence, aur ecosystem progress ko ek compact view me dekho.</p>
+            <div id="familyHighlights" class="signal-list"></div>
+          </article>
+          <article class="story-card dashboard-card">
+            <p class="eyebrow" data-i18n="recentLabel">Continue</p>
+            <h2 data-i18n="recentTitle">Recently used apps</h2>
+            <p class="muted" data-i18n="recentText">Jin apps par family ne recently kaam kiya hai, unhe yahin se dobara kholo.</p>
+            <div id="recentAppsList" class="recent-app-list"></div>
+          </article>
+        </div>
+      </section>
+
       <section class="section" id="apps">
         <div class="container">
           <div class="section-head">
@@ -167,6 +184,23 @@
               <h2 data-i18n="appsTitle">Aaj ke live Sathi apps</h2>
             </div>
             <p class="muted" data-i18n="appsText">Har card me app ka kaam seedhe user point of view se dikh raha hai.</p>
+          </div>
+          <div class="app-controls">
+            <label class="search-shell">
+              <span data-i18n="searchLabel">Search apps</span>
+              <input id="appSearchInput" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Kis app ki zarurat hai?">
+            </label>
+            <div id="categoryFilters" class="category-filters"></div>
+          </div>
+          <div class="recommend-shell">
+            <div class="section-head compact-head">
+              <div>
+                <p class="eyebrow" data-i18n="recommendedLabel">Recommended</p>
+                <h2 data-i18n="recommendedTitle">Next best apps</h2>
+              </div>
+              <p class="muted" data-i18n="recommendedText">Recent use, install status, aur family mix ke hisaab se yeh cards pehle dikh rahe hain.</p>
+            </div>
+            <div id="recommendedApps" class="recommend-grid"></div>
           </div>
           <div id="appGrid" class="app-grid"></div>
         </div>
